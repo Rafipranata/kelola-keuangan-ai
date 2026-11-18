@@ -222,22 +222,22 @@ const getProgressBarColor = (pct: number) => {
             <!-- Header Bar & Month Filter -->
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h1 class="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+                    <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
                         Dashboard Keuangan
                     </h1>
-                    <p class="text-xs sm:text-sm text-slate-400">
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
                         Pantau arus kas, status anggaran, dan insight cerdas AI Anda.
                     </p>
                 </div>
 
                 <!-- Month & Year Filter Selector -->
-                <div class="flex items-center gap-2 bg-slate-900/80 border border-white/10 rounded-xl p-1.5 backdrop-blur-md">
+                <div class="flex items-center gap-2 bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-white/10 rounded-xl p-1.5 backdrop-blur-md shadow-sm dark:shadow-none">
                     <select
                         v-model="selectedBulan"
                         @change="applyFilter"
-                        class="bg-transparent text-xs sm:text-sm text-slate-200 font-medium px-2 py-1 outline-none cursor-pointer"
+                        class="bg-transparent text-xs sm:text-sm text-slate-700 dark:text-slate-200 font-medium px-2 py-1 outline-none cursor-pointer"
                     >
-                        <option v-for="(nama, idx) in namaBulan" :key="idx" :value="idx + 1" class="bg-slate-900 text-white">
+                        <option v-for="(nama, idx) in namaBulan" :key="idx" :value="idx + 1" class="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
                             {{ nama }}
                         </option>
                     </select>
@@ -245,9 +245,9 @@ const getProgressBarColor = (pct: number) => {
                     <select
                         v-model="selectedTahun"
                         @change="applyFilter"
-                        class="bg-transparent text-xs sm:text-sm text-slate-200 font-medium px-2 py-1 outline-none cursor-pointer border-l border-white/10"
+                        class="bg-transparent text-xs sm:text-sm text-slate-700 dark:text-slate-200 font-medium px-2 py-1 outline-none cursor-pointer border-l border-slate-200 dark:border-white/10"
                     >
-                        <option v-for="y in [2024, 2025, 2026, 2027]" :key="y" :value="y" class="bg-slate-900 text-white">
+                        <option v-for="y in [2024, 2025, 2026, 2027]" :key="y" :value="y" class="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
                             {{ y }}
                         </option>
                     </select>
@@ -257,90 +257,90 @@ const getProgressBarColor = (pct: number) => {
             <!-- 1. Grid Ringkasan Atas (Total Saldo, Pemasukan, Pengeluaran, Sisa Anggaran) -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <!-- Total Saldo -->
-                <div class="rounded-2xl border border-pink-500/30 bg-gradient-to-br from-slate-900/90 via-slate-900/70 to-pink-950/20 p-5 backdrop-blur-md relative overflow-hidden shadow-lg shadow-pink-500/5">
+                <div class="rounded-2xl border border-pink-500/30 bg-gradient-to-br from-white via-white to-pink-50/50 dark:from-slate-900/90 dark:via-slate-900/70 dark:to-pink-950/20 p-5 backdrop-blur-md relative overflow-hidden shadow-sm dark:shadow-lg dark:shadow-pink-500/5 transition-colors">
                     <div class="flex items-center justify-between">
-                        <span class="text-xs font-medium text-slate-400 uppercase tracking-wider">Total Saldo</span>
-                        <div class="p-2 rounded-xl bg-pink-500/15 text-pink-400">
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Total Saldo</span>
+                        <div class="p-2 rounded-xl bg-pink-500/15 text-pink-500">
                             <Wallet class="size-4" />
                         </div>
                     </div>
                     <div class="mt-3">
-                        <h2 class="text-2xl font-black text-white tracking-tight">
+                        <h2 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
                             {{ formatRupiah(summary.total_saldo) }}
                         </h2>
-                        <span class="text-[11px] text-slate-400 mt-1 inline-block">Akumulasi seluruh akun</span>
+                        <span class="text-[11px] text-slate-500 dark:text-slate-400 mt-1 inline-block">Akumulasi seluruh akun</span>
                     </div>
                 </div>
 
                 <!-- Pemasukan Bulan Ini -->
-                <div class="rounded-2xl border border-white/10 bg-slate-900/70 p-5 backdrop-blur-md relative overflow-hidden shadow-lg">
+                <div class="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900/70 p-5 backdrop-blur-md relative overflow-hidden shadow-sm dark:shadow-lg transition-colors">
                     <div class="flex items-center justify-between">
-                        <span class="text-xs font-medium text-slate-400 uppercase tracking-wider">Pemasukan Bulan Ini</span>
-                        <div class="p-2 rounded-xl bg-emerald-500/15 text-emerald-400">
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Pemasukan Bulan Ini</span>
+                        <div class="p-2 rounded-xl bg-emerald-500/15 text-emerald-500">
                             <TrendingUp class="size-4" />
                         </div>
                     </div>
                     <div class="mt-3">
-                        <h2 class="text-2xl font-black text-emerald-400 tracking-tight">
+                        <h2 class="text-2xl font-black text-emerald-600 dark:text-emerald-400 tracking-tight">
                             {{ formatRupiah(summary.pemasukan_bulan_ini) }}
                         </h2>
-                        <span class="text-[11px] text-slate-400 mt-1 inline-block">Periode {{ namaBulan[selectedBulan - 1] }} {{ selectedTahun }}</span>
+                        <span class="text-[11px] text-slate-500 dark:text-slate-400 mt-1 inline-block">Periode {{ namaBulan[selectedBulan - 1] }} {{ selectedTahun }}</span>
                     </div>
                 </div>
 
                 <!-- Pengeluaran Bulan Ini -->
-                <div class="rounded-2xl border border-white/10 bg-slate-900/70 p-5 backdrop-blur-md relative overflow-hidden shadow-lg">
+                <div class="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900/70 p-5 backdrop-blur-md relative overflow-hidden shadow-sm dark:shadow-lg transition-colors">
                     <div class="flex items-center justify-between">
-                        <span class="text-xs font-medium text-slate-400 uppercase tracking-wider">Pengeluaran Bulan Ini</span>
-                        <div class="p-2 rounded-xl bg-pink-500/15 text-pink-400">
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Pengeluaran Bulan Ini</span>
+                        <div class="p-2 rounded-xl bg-pink-500/15 text-pink-500">
                             <TrendingDown class="size-4" />
                         </div>
                     </div>
                     <div class="mt-3">
-                        <h2 class="text-2xl font-black text-pink-400 tracking-tight">
+                        <h2 class="text-2xl font-black text-pink-600 dark:text-pink-400 tracking-tight">
                             {{ formatRupiah(summary.pengeluaran_bulan_ini) }}
                         </h2>
-                        <span class="text-[11px] text-slate-400 mt-1 inline-block">Periode {{ namaBulan[selectedBulan - 1] }} {{ selectedTahun }}</span>
+                        <span class="text-[11px] text-slate-500 dark:text-slate-400 mt-1 inline-block">Periode {{ namaBulan[selectedBulan - 1] }} {{ selectedTahun }}</span>
                     </div>
                 </div>
 
                 <!-- Sisa Anggaran -->
-                <div class="rounded-2xl border border-white/10 bg-slate-900/70 p-5 backdrop-blur-md relative overflow-hidden shadow-lg">
+                <div class="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900/70 p-5 backdrop-blur-md relative overflow-hidden shadow-sm dark:shadow-lg transition-colors">
                     <div class="flex items-center justify-between">
-                        <span class="text-xs font-medium text-slate-400 uppercase tracking-wider">Sisa Anggaran</span>
-                        <div class="p-2 rounded-xl bg-purple-500/15 text-purple-400">
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Sisa Anggaran</span>
+                        <div class="p-2 rounded-xl bg-purple-500/15 text-purple-500">
                             <PieChart class="size-4" />
                         </div>
                     </div>
                     <div class="mt-3">
-                        <h2 class="text-2xl font-black text-white tracking-tight">
+                        <h2 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
                             {{ formatRupiah(summary.sisa_anggaran_total) }}
                         </h2>
                         <div class="flex items-center gap-2 mt-2">
-                            <div class="h-1.5 flex-1 bg-slate-800 rounded-full overflow-hidden">
+                            <div class="h-1.5 flex-1 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
                                 <div
                                     class="h-full rounded-full transition-all duration-500"
                                     :class="getProgressBarColor(summary.persentase_anggaran_total)"
                                     :style="{ width: `${Math.min(100, summary.persentase_anggaran_total)}%` }"
                                 ></div>
                             </div>
-                            <span class="text-[11px] font-semibold text-slate-300">{{ summary.persentase_anggaran_total }}%</span>
+                            <span class="text-[11px] font-semibold text-slate-600 dark:text-slate-300">{{ summary.persentase_anggaran_total }}%</span>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- 2. Panel Quick Smart AI Input (Prominent Card) -->
-            <div class="rounded-2xl border border-pink-500/40 bg-gradient-to-r from-slate-900/90 via-slate-900/80 to-pink-950/20 p-5 backdrop-blur-md shadow-xl shadow-pink-500/10">
+            <div class="rounded-2xl border border-pink-500/40 bg-gradient-to-r from-pink-50/70 via-white to-pink-50/40 dark:from-slate-900/90 dark:via-slate-900/80 dark:to-pink-950/20 p-5 backdrop-blur-md shadow-md dark:shadow-xl dark:shadow-pink-500/10 transition-colors">
                 <div class="flex items-center gap-2.5 mb-3">
                     <div class="flex size-8 items-center justify-center rounded-xl bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-md shadow-pink-500/30">
                         <Sparkles class="size-4" />
                     </div>
                     <div>
-                        <h3 class="text-base font-bold text-white flex items-center gap-2">
+                        <h3 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
                             Catat Transaksi Cepat dengan AI
                         </h3>
-                        <p class="text-xs text-slate-400">
+                        <p class="text-xs text-slate-500 dark:text-slate-400">
                             Cukup ketik secara bebas dalam Bahasa Indonesia, AI akan membedah nominal, kategori, dan metode pembayaran.
                         </p>
                     </div>
@@ -353,7 +353,7 @@ const getProgressBarColor = (pct: number) => {
                             @keyup.enter="submitAiTransaction"
                             type="text"
                             placeholder="Ketik transaksi bebas... cth: Beli kopi kenangan 22rb pakai QRIS atau Terima gaji 5jt"
-                            class="w-full rounded-xl border border-white/10 bg-slate-950/80 px-4 py-3 text-sm text-slate-100 placeholder-slate-500 outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition"
+                            class="w-full rounded-xl border border-slate-300 dark:border-white/10 bg-white dark:bg-slate-950/80 px-4 py-3 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition"
                             :disabled="isProcessingAi"
                         />
                     </div>
@@ -369,26 +369,26 @@ const getProgressBarColor = (pct: number) => {
                 </div>
 
                 <!-- Toast / Banner Result -->
-                <div v-if="aiToastMessage" class="mt-3 p-3 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs flex items-center justify-between">
+                <div v-if="aiToastMessage" class="mt-3 p-3 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-600 dark:text-emerald-300 text-xs flex items-center justify-between">
                     <span>✨ {{ aiToastMessage }}</span>
-                    <button @click="aiToastMessage = null" class="font-bold text-slate-400 hover:text-white">✕</button>
+                    <button @click="aiToastMessage = null" class="font-bold text-slate-400 hover:text-slate-700 dark:hover:text-white">✕</button>
                 </div>
-                <div v-if="aiErrorMessage" class="mt-3 p-3 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs flex items-center justify-between">
+                <div v-if="aiErrorMessage" class="mt-3 p-3 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-600 dark:text-rose-300 text-xs flex items-center justify-between">
                     <span>⚠️ {{ aiErrorMessage }}</span>
-                    <button @click="aiErrorMessage = null" class="font-bold text-slate-400 hover:text-white">✕</button>
+                    <button @click="aiErrorMessage = null" class="font-bold text-slate-400 hover:text-slate-700 dark:hover:text-white">✕</button>
                 </div>
             </div>
 
             <!-- 3. Panel AI Financial Advisor -->
-            <div class="rounded-2xl border border-white/10 bg-slate-900/70 p-5 backdrop-blur-md shadow-lg">
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-white/10">
+            <div class="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900/70 p-5 backdrop-blur-md shadow-sm dark:shadow-lg transition-colors">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-slate-200 dark:border-white/10">
                     <div class="flex items-center gap-3">
-                        <div class="p-2.5 rounded-xl bg-purple-500/15 text-purple-400">
+                        <div class="p-2.5 rounded-xl bg-purple-500/15 text-purple-500">
                             <Bot class="size-5" />
                         </div>
                         <div>
-                            <h3 class="text-base font-bold text-white">AI Financial Advisor</h3>
-                            <p class="text-xs text-slate-400">Dapatkan evaluasi pengeluaran & rekomendasi berhemat bulan ini.</p>
+                            <h3 class="text-base font-bold text-slate-900 dark:text-white">AI Financial Advisor</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Dapatkan evaluasi pengeluaran & rekomendasi berhemat bulan ini.</p>
                         </div>
                     </div>
                     <button
@@ -404,11 +404,11 @@ const getProgressBarColor = (pct: number) => {
 
                 <!-- Advice Content Display -->
                 <div class="mt-4">
-                    <div v-if="adviceError" class="p-3 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs">
+                    <div v-if="adviceError" class="p-3 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-600 dark:text-rose-300 text-xs">
                         {{ adviceError }}
                     </div>
 
-                    <div v-else-if="aiAdvice" class="p-4 rounded-xl bg-slate-950/60 border border-white/5 text-sm text-slate-200 leading-relaxed whitespace-pre-line" v-html="formattedAdvice"></div>
+                    <div v-else-if="aiAdvice" class="p-4 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-white/5 text-sm text-slate-800 dark:text-slate-200 leading-relaxed whitespace-pre-line" v-html="formattedAdvice"></div>
 
                     <div v-else class="text-center py-6 text-slate-500 text-xs">
                         Klik tombol <strong>"Analisis Keuangan Bulan Ini"</strong> untuk meminta Gemini mengevaluasi performa finansial Anda.
@@ -419,14 +419,14 @@ const getProgressBarColor = (pct: number) => {
             <!-- 4. Dua Kolom: Widget Progress Anggaran & Kategori Pengeluaran Terbesar -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <!-- Progress Anggaran per Kategori -->
-                <div class="rounded-2xl border border-white/10 bg-slate-900/70 p-5 backdrop-blur-md shadow-lg flex flex-col justify-between">
+                <div class="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900/70 p-5 backdrop-blur-md shadow-sm dark:shadow-lg flex flex-col justify-between transition-colors">
                     <div>
-                        <div class="flex items-center justify-between pb-3 border-b border-white/10 mb-4">
-                            <h3 class="text-base font-bold text-white flex items-center gap-2">
-                                <PieChart class="size-4 text-pink-400" />
+                        <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-white/10 mb-4">
+                            <h3 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                <PieChart class="size-4 text-pink-500 dark:text-pink-400" />
                                 <span>Status Anggaran Kategori</span>
                             </h3>
-                            <span class="text-xs text-slate-400">{{ budgets.length }} Kategori Dibatasi</span>
+                            <span class="text-xs text-slate-500 dark:text-slate-400">{{ budgets.length }} Kategori Dibatasi</span>
                         </div>
 
                         <div v-if="budgets.length === 0" class="text-center py-8 text-slate-500 text-xs">
@@ -436,13 +436,13 @@ const getProgressBarColor = (pct: number) => {
                         <div v-else class="space-y-4">
                             <div v-for="b in budgets" :key="b.id" class="space-y-1.5">
                                 <div class="flex items-center justify-between text-xs">
-                                    <span class="font-medium text-slate-200">{{ b.kategori_nama }}</span>
-                                    <span class="text-slate-400">
-                                        <span class="font-semibold" :class="b.persentase > 100 ? 'text-rose-400' : 'text-slate-200'">{{ formatRupiah(b.terpakai) }}</span>
+                                    <span class="font-medium text-slate-700 dark:text-slate-200">{{ b.kategori_nama }}</span>
+                                    <span class="text-slate-500 dark:text-slate-400">
+                                        <span class="font-semibold" :class="b.persentase > 100 ? 'text-rose-600 dark:text-rose-400' : 'text-slate-900 dark:text-slate-200'">{{ formatRupiah(b.terpakai) }}</span>
                                         / {{ formatRupiah(b.batas_anggaran) }}
                                     </span>
                                 </div>
-                                <div class="h-2 w-full bg-slate-800 rounded-full overflow-hidden">
+                                <div class="h-2 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
                                     <div
                                         class="h-full rounded-full transition-all duration-500"
                                         :class="getProgressBarColor(b.persentase)"
@@ -451,7 +451,7 @@ const getProgressBarColor = (pct: number) => {
                                 </div>
                                 <div class="flex items-center justify-between text-[10px] text-slate-500">
                                     <span>Sisa: {{ formatRupiah(b.sisa) }}</span>
-                                    <span :class="b.persentase > 100 ? 'text-rose-400 font-bold' : b.persentase > 80 ? 'text-amber-400 font-bold' : ''">
+                                    <span :class="b.persentase > 100 ? 'text-rose-600 dark:text-rose-400 font-bold' : b.persentase > 80 ? 'text-amber-600 dark:text-amber-400 font-bold' : ''">
                                         {{ b.persentase }}%
                                     </span>
                                 </div>
@@ -461,13 +461,13 @@ const getProgressBarColor = (pct: number) => {
                 </div>
 
                 <!-- Pengeluaran per Kategori -->
-                <div class="rounded-2xl border border-white/10 bg-slate-900/70 p-5 backdrop-blur-md shadow-lg">
-                    <div class="flex items-center justify-between pb-3 border-b border-white/10 mb-4">
-                        <h3 class="text-base font-bold text-white flex items-center gap-2">
-                            <TrendingDown class="size-4 text-pink-400" />
+                <div class="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900/70 p-5 backdrop-blur-md shadow-sm dark:shadow-lg transition-colors">
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-white/10 mb-4">
+                        <h3 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                            <TrendingDown class="size-4 text-pink-500 dark:text-pink-400" />
                             <span>Pengeluaran per Kategori</span>
                         </h3>
-                        <span class="text-xs text-slate-400">{{ formatRupiah(summary.pengeluaran_bulan_ini) }}</span>
+                        <span class="text-xs text-slate-500 dark:text-slate-400">{{ formatRupiah(summary.pengeluaran_bulan_ini) }}</span>
                     </div>
 
                     <div v-if="expenses_by_category.length === 0" class="text-center py-8 text-slate-500 text-xs">
@@ -478,18 +478,18 @@ const getProgressBarColor = (pct: number) => {
                         <div
                             v-for="cat in expenses_by_category"
                             :key="cat.id"
-                            class="flex items-center justify-between p-3 rounded-xl bg-slate-950/40 border border-white/5"
+                            class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-950/40 border border-slate-200/80 dark:border-white/5"
                         >
                             <div class="flex items-center gap-3">
                                 <div
                                     class="size-3 rounded-full"
                                     :style="{ backgroundColor: cat.warna || '#ec4899' }"
                                 ></div>
-                                <span class="text-sm font-medium text-slate-200">{{ cat.nama }}</span>
+                                <span class="text-sm font-medium text-slate-800 dark:text-slate-200">{{ cat.nama }}</span>
                             </div>
                             <div class="text-right">
-                                <span class="text-sm font-bold text-slate-100">{{ formatRupiah(cat.total) }}</span>
-                                <span class="block text-[11px] text-slate-400">{{ cat.persentase }}%</span>
+                                <span class="text-sm font-bold text-slate-900 dark:text-slate-100">{{ formatRupiah(cat.total) }}</span>
+                                <span class="block text-[11px] text-slate-500 dark:text-slate-400">{{ cat.persentase }}%</span>
                             </div>
                         </div>
                     </div>
@@ -497,10 +497,10 @@ const getProgressBarColor = (pct: number) => {
             </div>
 
             <!-- 5. 10 Transaksi Terbaru (Responsive Table & Stacked Cards) -->
-            <div class="rounded-2xl border border-white/10 bg-slate-900/70 p-5 backdrop-blur-md shadow-lg">
-                <div class="flex items-center justify-between pb-3 border-b border-white/10 mb-4">
-                    <h3 class="text-base font-bold text-white">Transaksi Terbaru</h3>
-                    <a href="/transactions" class="text-xs text-pink-400 hover:text-pink-300 font-semibold flex items-center gap-1">
+            <div class="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900/70 p-5 backdrop-blur-md shadow-sm dark:shadow-lg transition-colors">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-white/10 mb-4">
+                    <h3 class="text-base font-bold text-slate-900 dark:text-white">Transaksi Terbaru</h3>
+                    <a href="/transactions" class="text-xs text-pink-600 dark:text-pink-400 hover:text-pink-700 dark:hover:text-pink-300 font-semibold flex items-center gap-1">
                         <span>Lihat Semua</span>
                         <ChevronRight class="size-3.5" />
                     </a>
@@ -513,8 +513,8 @@ const getProgressBarColor = (pct: number) => {
                 <div v-else>
                     <!-- Desktop Table (md:block) -->
                     <div class="hidden md:block overflow-x-auto">
-                        <table class="w-full text-left text-sm text-slate-300">
-                            <thead class="text-xs uppercase bg-slate-950/50 text-slate-400 border-b border-white/10">
+                        <table class="w-full text-left text-sm text-slate-700 dark:text-slate-300">
+                            <thead class="text-xs uppercase bg-slate-100/80 dark:bg-slate-950/50 text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-white/10">
                                 <tr>
                                     <th class="py-3 px-4">Tanggal</th>
                                     <th class="py-3 px-4">Deskripsi</th>
@@ -523,26 +523,26 @@ const getProgressBarColor = (pct: number) => {
                                     <th class="py-3 px-4 text-right">Nominal</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-white/5">
-                                <tr v-for="t in recent_transactions" :key="t.id" class="hover:bg-white/5 transition">
-                                    <td class="py-3 px-4 text-xs text-slate-400 whitespace-nowrap">{{ t.tanggal_transaksi }}</td>
-                                    <td class="py-3 px-4 font-medium text-slate-200 flex items-center gap-2">
+                            <tbody class="divide-y divide-slate-200 dark:divide-white/5">
+                                <tr v-for="t in recent_transactions" :key="t.id" class="hover:bg-slate-50 dark:hover:bg-white/5 transition">
+                                    <td class="py-3 px-4 text-xs text-slate-500 dark:text-slate-400 whitespace-nowrap">{{ t.tanggal_transaksi }}</td>
+                                    <td class="py-3 px-4 font-medium text-slate-900 dark:text-slate-200 flex items-center gap-2">
                                         <span>{{ t.deskripsi }}</span>
                                         <span
                                             v-if="t.is_ai_generated"
-                                            class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-pink-500/20 text-pink-400 border border-pink-500/30"
+                                            class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-pink-500/15 text-pink-600 dark:text-pink-400 border border-pink-500/30"
                                             title="Dicatat otomatis dengan Smart AI"
                                         >
                                             <Sparkles class="size-2.5" /> AI
                                         </span>
                                     </td>
                                     <td class="py-3 px-4">
-                                        <span class="inline-block px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-800 text-slate-300">
+                                        <span class="inline-block px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-transparent">
                                             {{ t.category?.nama }}
                                         </span>
                                     </td>
-                                    <td class="py-3 px-4 text-xs text-slate-400">{{ t.metode_pembayaran }}</td>
-                                    <td class="py-3 px-4 text-right font-bold whitespace-nowrap" :class="t.category?.tipe === 'income' ? 'text-emerald-400' : 'text-pink-400'">
+                                    <td class="py-3 px-4 text-xs text-slate-500 dark:text-slate-400">{{ t.metode_pembayaran }}</td>
+                                    <td class="py-3 px-4 text-right font-bold whitespace-nowrap" :class="t.category?.tipe === 'income' ? 'text-emerald-600 dark:text-emerald-400' : 'text-pink-600 dark:text-pink-400'">
                                         {{ t.category?.tipe === 'income' ? '+' : '-' }} {{ formatRupiah(t.nominal) }}
                                     </td>
                                 </tr>
@@ -555,14 +555,14 @@ const getProgressBarColor = (pct: number) => {
                         <div
                             v-for="t in recent_transactions"
                             :key="t.id"
-                            class="p-3 rounded-xl bg-slate-950/60 border border-white/5 flex items-center justify-between"
+                            class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-white/5 flex items-center justify-between"
                         >
                             <div class="space-y-1">
                                 <div class="flex items-center gap-1.5">
-                                    <span class="font-medium text-sm text-slate-200">{{ t.deskripsi }}</span>
-                                    <Sparkles v-if="t.is_ai_generated" class="size-3 text-pink-400" />
+                                    <span class="font-medium text-sm text-slate-900 dark:text-slate-200">{{ t.deskripsi }}</span>
+                                    <Sparkles v-if="t.is_ai_generated" class="size-3 text-pink-500" />
                                 </div>
-                                <div class="flex items-center gap-2 text-[11px] text-slate-400">
+                                <div class="flex items-center gap-2 text-[11px] text-slate-500 dark:text-slate-400">
                                     <span>{{ t.tanggal_transaksi }}</span>
                                     <span>•</span>
                                     <span>{{ t.category?.nama }}</span>
@@ -570,7 +570,7 @@ const getProgressBarColor = (pct: number) => {
                                     <span>{{ t.metode_pembayaran }}</span>
                                 </div>
                             </div>
-                            <div class="text-right font-bold text-sm" :class="t.category?.tipe === 'income' ? 'text-emerald-400' : 'text-pink-400'">
+                            <div class="text-right font-bold text-sm" :class="t.category?.tipe === 'income' ? 'text-emerald-600 dark:text-emerald-400' : 'text-pink-600 dark:text-pink-400'">
                                 {{ t.category?.tipe === 'income' ? '+' : '-' }} {{ formatRupiah(t.nominal) }}
                             </div>
                         </div>

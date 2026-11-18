@@ -147,11 +147,11 @@ const deleteTransaction = (id: number) => {
             <!-- Header Bar -->
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h1 class="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+                    <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
                         <ReceiptText class="size-6 text-pink-500" />
                         <span>Daftar Transaksi</span>
                     </h1>
-                    <p class="text-xs sm:text-sm text-slate-400">
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
                         Kelola seluruh arus kas masuk dan keluar secara terorganisir.
                     </p>
                 </div>
@@ -166,17 +166,17 @@ const deleteTransaction = (id: number) => {
             </div>
 
             <!-- Filter Card -->
-            <div class="rounded-2xl border border-white/10 bg-slate-900/70 p-4 backdrop-blur-md shadow-lg space-y-3">
+            <div class="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900/70 p-4 backdrop-blur-md shadow-sm dark:shadow-lg space-y-3 transition-colors">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
                     <!-- Search Input -->
                     <div class="relative">
-                        <Search class="absolute left-3 top-3 size-4 text-slate-500" />
+                        <Search class="absolute left-3 top-3 size-4 text-slate-400 dark:text-slate-500" />
                         <input
                             v-model="filterSearch"
                             @keyup.enter="handleFilter"
                             type="text"
                             placeholder="Cari deskripsi / metode..."
-                            class="w-full pl-9 pr-3 py-2 text-xs rounded-xl border border-white/10 bg-slate-950/70 text-slate-100 placeholder-slate-500 outline-none focus:border-pink-500"
+                            class="w-full pl-9 pr-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-950/70 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none focus:border-pink-500"
                         />
                     </div>
 
@@ -184,7 +184,7 @@ const deleteTransaction = (id: number) => {
                     <select
                         v-model="filterTipe"
                         @change="handleFilter"
-                        class="px-3 py-2 text-xs rounded-xl border border-white/10 bg-slate-950/70 text-slate-100 outline-none focus:border-pink-500"
+                        class="px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-950/70 text-slate-800 dark:text-slate-100 outline-none focus:border-pink-500"
                     >
                         <option value="">Semua Tipe</option>
                         <option value="income">Pemasukan (Income)</option>
@@ -195,7 +195,7 @@ const deleteTransaction = (id: number) => {
                     <select
                         v-model="filterCategory"
                         @change="handleFilter"
-                        class="px-3 py-2 text-xs rounded-xl border border-white/10 bg-slate-950/70 text-slate-100 outline-none focus:border-pink-500"
+                        class="px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-950/70 text-slate-800 dark:text-slate-100 outline-none focus:border-pink-500"
                     >
                         <option value="">Semua Kategori</option>
                         <option v-for="c in categories" :key="c.id" :value="c.id">
@@ -207,7 +207,7 @@ const deleteTransaction = (id: number) => {
                     <select
                         v-model="filterBulan"
                         @change="handleFilter"
-                        class="px-3 py-2 text-xs rounded-xl border border-white/10 bg-slate-950/70 text-slate-100 outline-none focus:border-pink-500"
+                        class="px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-950/70 text-slate-800 dark:text-slate-100 outline-none focus:border-pink-500"
                     >
                         <option value="">Semua Bulan</option>
                         <option value="1">Januari</option>
@@ -228,13 +228,13 @@ const deleteTransaction = (id: number) => {
                     <div class="flex items-center gap-2">
                         <button
                             @click="handleFilter"
-                            class="flex-1 py-2 rounded-xl bg-pink-500/20 text-pink-400 border border-pink-500/30 text-xs font-semibold hover:bg-pink-500/30 transition text-center"
+                            class="flex-1 py-2 rounded-xl bg-pink-500/15 text-pink-600 dark:text-pink-400 border border-pink-500/30 text-xs font-semibold hover:bg-pink-500/25 transition text-center"
                         >
                             Terapkan
                         </button>
                         <button
                             @click="resetFilter"
-                            class="px-3 py-2 rounded-xl bg-slate-800 text-slate-400 text-xs font-medium hover:text-white transition"
+                            class="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-xs font-medium hover:text-slate-900 dark:hover:text-white transition"
                         >
                             Reset
                         </button>
@@ -243,7 +243,7 @@ const deleteTransaction = (id: number) => {
             </div>
 
             <!-- Transactions List -->
-            <div class="rounded-2xl border border-white/10 bg-slate-900/70 backdrop-blur-md shadow-lg overflow-hidden">
+            <div class="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900/70 backdrop-blur-md shadow-sm dark:shadow-lg overflow-hidden transition-colors">
                 <div v-if="transactions.data.length === 0" class="text-center py-12 text-slate-500 text-sm">
                     Tidak ada transaksi yang cocok dengan filter atau kriteria pencarian.
                 </div>
@@ -251,8 +251,8 @@ const deleteTransaction = (id: number) => {
                 <div v-else>
                     <!-- Desktop Table -->
                     <div class="hidden md:block overflow-x-auto">
-                        <table class="w-full text-left text-sm text-slate-300">
-                            <thead class="text-xs uppercase bg-slate-950/60 text-slate-400 border-b border-white/10">
+                        <table class="w-full text-left text-sm text-slate-700 dark:text-slate-300">
+                            <thead class="text-xs uppercase bg-slate-100/80 dark:bg-slate-950/60 text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-white/10">
                                 <tr>
                                     <th class="py-3 px-4">Tanggal</th>
                                     <th class="py-3 px-4">Deskripsi</th>
@@ -262,15 +262,15 @@ const deleteTransaction = (id: number) => {
                                     <th class="py-3 px-4 text-center">Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-white/5">
-                                <tr v-for="t in transactions.data" :key="t.id" class="hover:bg-white/5 transition">
-                                    <td class="py-3 px-4 text-xs text-slate-400 whitespace-nowrap">{{ t.tanggal_transaksi }}</td>
-                                    <td class="py-3 px-4 font-medium text-slate-200">
+                            <tbody class="divide-y divide-slate-200 dark:divide-white/5">
+                                <tr v-for="t in transactions.data" :key="t.id" class="hover:bg-slate-50 dark:hover:bg-white/5 transition">
+                                    <td class="py-3 px-4 text-xs text-slate-500 dark:text-slate-400 whitespace-nowrap">{{ t.tanggal_transaksi }}</td>
+                                    <td class="py-3 px-4 font-medium text-slate-900 dark:text-slate-200">
                                         <div class="flex items-center gap-2">
                                             <span>{{ t.deskripsi }}</span>
                                             <span
                                                 v-if="t.is_ai_generated"
-                                                class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-pink-500/20 text-pink-400 border border-pink-500/30"
+                                                class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-pink-500/15 text-pink-600 dark:text-pink-400 border border-pink-500/30"
                                                 title="Dicatat otomatis dengan AI"
                                             >
                                                 <Sparkles class="size-2.5" /> AI
@@ -278,26 +278,26 @@ const deleteTransaction = (id: number) => {
                                         </div>
                                     </td>
                                     <td class="py-3 px-4">
-                                        <span class="inline-block px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-800 text-slate-300">
+                                        <span class="inline-block px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-transparent">
                                             {{ t.category?.nama }}
                                         </span>
                                     </td>
-                                    <td class="py-3 px-4 text-xs text-slate-400">{{ t.metode_pembayaran }}</td>
-                                    <td class="py-3 px-4 text-right font-bold whitespace-nowrap" :class="t.category?.tipe === 'income' ? 'text-emerald-400' : 'text-pink-400'">
+                                    <td class="py-3 px-4 text-xs text-slate-500 dark:text-slate-400">{{ t.metode_pembayaran }}</td>
+                                    <td class="py-3 px-4 text-right font-bold whitespace-nowrap" :class="t.category?.tipe === 'income' ? 'text-emerald-600 dark:text-emerald-400' : 'text-pink-600 dark:text-pink-400'">
                                         {{ t.category?.tipe === 'income' ? '+' : '-' }} {{ formatRupiah(t.nominal) }}
                                     </td>
                                     <td class="py-3 px-4 text-center">
                                         <div class="flex items-center justify-center gap-2">
                                             <button
                                                 @click="openEditModal(t)"
-                                                class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
+                                                class="p-1.5 rounded-lg text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition"
                                                 title="Edit"
                                             >
                                                 <Edit class="size-3.5" />
                                             </button>
                                             <button
                                                 @click="deleteTransaction(t.id)"
-                                                class="p-1.5 rounded-lg text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition"
+                                                class="p-1.5 rounded-lg text-rose-500 hover:text-rose-600 dark:text-rose-400 dark:hover:text-rose-300 hover:bg-rose-500/10 transition"
                                                 title="Hapus"
                                             >
                                                 <Trash2 class="size-3.5" />
@@ -310,7 +310,7 @@ const deleteTransaction = (id: number) => {
                     </div>
 
                     <!-- Mobile Stacked Card -->
-                    <div class="md:hidden divide-y divide-white/5 p-2">
+                    <div class="md:hidden divide-y divide-slate-200 dark:divide-white/5 p-2">
                         <div
                             v-for="t in transactions.data"
                             :key="t.id"
@@ -319,10 +319,10 @@ const deleteTransaction = (id: number) => {
                             <div class="flex items-start justify-between">
                                 <div>
                                     <div class="flex items-center gap-1.5">
-                                        <span class="font-medium text-sm text-slate-200">{{ t.deskripsi }}</span>
-                                        <Sparkles v-if="t.is_ai_generated" class="size-3 text-pink-400" />
+                                        <span class="font-medium text-sm text-slate-900 dark:text-slate-200">{{ t.deskripsi }}</span>
+                                        <Sparkles v-if="t.is_ai_generated" class="size-3 text-pink-500" />
                                     </div>
-                                    <div class="flex items-center gap-2 text-[11px] text-slate-400 mt-1">
+                                    <div class="flex items-center gap-2 text-[11px] text-slate-500 dark:text-slate-400 mt-1">
                                         <span>{{ t.tanggal_transaksi }}</span>
                                         <span>•</span>
                                         <span>{{ t.category?.nama }}</span>
@@ -330,20 +330,20 @@ const deleteTransaction = (id: number) => {
                                         <span>{{ t.metode_pembayaran }}</span>
                                     </div>
                                 </div>
-                                <div class="text-right font-bold text-sm" :class="t.category?.tipe === 'income' ? 'text-emerald-400' : 'text-pink-400'">
+                                <div class="text-right font-bold text-sm" :class="t.category?.tipe === 'income' ? 'text-emerald-600 dark:text-emerald-400' : 'text-pink-600 dark:text-pink-400'">
                                     {{ t.category?.tipe === 'income' ? '+' : '-' }} {{ formatRupiah(t.nominal) }}
                                 </div>
                             </div>
-                            <div class="flex justify-end gap-2 pt-1 border-t border-white/5">
+                            <div class="flex justify-end gap-2 pt-1 border-t border-slate-100 dark:border-white/5">
                                 <button
                                     @click="openEditModal(t)"
-                                    class="text-xs text-slate-300 hover:text-white px-2 py-1 rounded bg-slate-800"
+                                    class="text-xs text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800"
                                 >
                                     Edit
                                 </button>
                                 <button
                                     @click="deleteTransaction(t.id)"
-                                    class="text-xs text-rose-400 hover:text-rose-300 px-2 py-1 rounded bg-rose-500/10"
+                                    class="text-xs text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 px-2.5 py-1 rounded-lg bg-rose-500/10"
                                 >
                                     Hapus
                                 </button>
@@ -352,13 +352,13 @@ const deleteTransaction = (id: number) => {
                     </div>
 
                     <!-- Pagination -->
-                    <div class="p-4 border-t border-white/10 flex items-center justify-between text-xs text-slate-400">
+                    <div class="p-4 border-t border-slate-200 dark:border-white/10 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
                         <span>Total: {{ transactions.total }} transaksi</span>
                         <div class="flex items-center gap-2">
                             <button
                                 v-if="transactions.prev_page_url"
                                 @click="router.get(transactions.prev_page_url)"
-                                class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200"
+                                class="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200"
                             >
                                 Sebelumnya
                             </button>
@@ -366,7 +366,7 @@ const deleteTransaction = (id: number) => {
                             <button
                                 v-if="transactions.next_page_url"
                                 @click="router.get(transactions.next_page_url)"
-                                class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200"
+                                class="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200"
                             >
                                 Selanjutnya
                             </button>
@@ -377,22 +377,22 @@ const deleteTransaction = (id: number) => {
         </div>
 
         <!-- Create / Edit Modal -->
-        <div v-if="showModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
-            <div class="w-full max-w-md rounded-2xl border border-white/10 bg-[#0f172a] p-6 shadow-2xl relative">
-                <div class="flex items-center justify-between pb-3 border-b border-white/10">
-                    <h3 class="font-bold text-base text-white">
+        <div v-if="showModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+            <div class="w-full max-w-md rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#0f172a] p-6 shadow-2xl relative">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-white/10">
+                    <h3 class="font-bold text-base text-slate-900 dark:text-white">
                         {{ editingTransaction ? 'Edit Transaksi' : 'Tambah Transaksi Baru' }}
                     </h3>
-                    <button @click="showModal = false" class="text-slate-400 hover:text-white">✕</button>
+                    <button @click="showModal = false" class="text-slate-400 hover:text-slate-700 dark:hover:text-white">✕</button>
                 </div>
 
                 <form @submit.prevent="submitForm" class="mt-4 space-y-4">
                     <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1">Kategori</label>
+                        <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Kategori</label>
                         <select
                             v-model="form.category_id"
                             required
-                            class="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-sm text-slate-100 outline-none focus:border-pink-500"
+                            class="w-full rounded-xl border border-slate-300 dark:border-white/10 bg-slate-50 dark:bg-slate-900 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-pink-500"
                         >
                             <option value="" disabled>Pilih Kategori</option>
                             <option v-for="cat in categories" :key="cat.id" :value="cat.id">
@@ -402,7 +402,7 @@ const deleteTransaction = (id: number) => {
                     </div>
 
                     <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1">Nominal (Rp)</label>
+                        <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Nominal (Rp)</label>
                         <input
                             v-model="form.nominal"
                             type="number"
@@ -410,37 +410,37 @@ const deleteTransaction = (id: number) => {
                             step="any"
                             required
                             placeholder="cth: 50000"
-                            class="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-sm text-slate-100 outline-none focus:border-pink-500"
+                            class="w-full rounded-xl border border-slate-300 dark:border-white/10 bg-slate-50 dark:bg-slate-900 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-pink-500"
                         />
                     </div>
 
                     <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1">Deskripsi</label>
+                        <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Deskripsi</label>
                         <input
                             v-model="form.deskripsi"
                             type="text"
                             required
                             placeholder="cth: Beli makan siang nasi padang"
-                            class="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-sm text-slate-100 outline-none focus:border-pink-500"
+                            class="w-full rounded-xl border border-slate-300 dark:border-white/10 bg-slate-50 dark:bg-slate-900 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-pink-500"
                         />
                     </div>
 
                     <div class="grid grid-cols-2 gap-3">
                         <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-1">Tanggal</label>
+                            <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Tanggal</label>
                             <input
                                 v-model="form.tanggal_transaksi"
                                 type="date"
                                 required
-                                class="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-sm text-slate-100 outline-none focus:border-pink-500"
+                                class="w-full rounded-xl border border-slate-300 dark:border-white/10 bg-slate-50 dark:bg-slate-900 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-pink-500"
                             />
                         </div>
 
                         <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-1">Metode</label>
+                            <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Metode</label>
                             <select
                                 v-model="form.metode_pembayaran"
-                                class="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-sm text-slate-100 outline-none focus:border-pink-500"
+                                class="w-full rounded-xl border border-slate-300 dark:border-white/10 bg-slate-50 dark:bg-slate-900 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-pink-500"
                             >
                                 <option value="Cash">Cash</option>
                                 <option value="QRIS">QRIS</option>
@@ -450,11 +450,11 @@ const deleteTransaction = (id: number) => {
                         </div>
                     </div>
 
-                    <div class="flex justify-end gap-2 pt-3 border-t border-white/10">
+                    <div class="flex justify-end gap-2 pt-3 border-t border-slate-200 dark:border-white/10">
                         <button
                             type="button"
                             @click="showModal = false"
-                            class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white bg-slate-800"
+                            class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-800"
                         >
                             Batal
                         </button>
