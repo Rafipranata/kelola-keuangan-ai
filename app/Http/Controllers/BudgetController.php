@@ -17,6 +17,7 @@ class BudgetController extends Controller
     public function index(Request $request): Response
     {
         $user = $request->user();
+        
         $now = Carbon::now();
         $bulan = (int) $request->input('bulan', $now->month);
         $tahun = (int) $request->input('tahun', $now->year);
