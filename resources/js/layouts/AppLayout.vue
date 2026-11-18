@@ -71,7 +71,9 @@ const triggerAiModal = () => {
 };
 
 const getCsrfToken = () => {
-    const meta = document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement | null;
+    const meta = document.querySelector(
+        'meta[name="csrf-token"]',
+    ) as HTMLMetaElement | null;
     if (meta && meta.content) return meta.content;
 
     // Fallback ambil dari cookie XSRF-TOKEN bawaan Laravel jika ada
@@ -91,7 +93,7 @@ const submitQuickAi = async () => {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': getCsrfToken(),
                 'X-XSRF-TOKEN': getCsrfToken(),
-                'Accept': 'application/json',
+                Accept: 'application/json',
             },
             body: JSON.stringify({ prompt: quickPrompt.value }),
         });
@@ -102,7 +104,8 @@ const submitQuickAi = async () => {
             quickPrompt.value = '';
             window.location.reload();
         } else {
-            aiError.value = data.message || 'Gagal memproses transaksi dengan AI.';
+            aiError.value =
+                data.message || 'Gagal memproses transaksi dengan AI.';
         }
     } catch (err: any) {
         aiError.value = err.message || 'Terjadi kesalahan koneksi.';
@@ -116,13 +119,21 @@ const showMobileProfileModal = ref(false);
 </script>
 
 <template>
-    <div class="min-h-screen bg-slate-50 dark:bg-[#090d16] text-slate-800 dark:text-slate-100 flex flex-col relative selection:bg-pink-500 selection:text-white transition-colors duration-200">
+    <div
+        class="relative flex min-h-screen flex-col bg-slate-50 text-slate-800 transition-colors duration-200 selection:bg-pink-500 selection:text-white dark:bg-[#090d16] dark:text-slate-100"
+    >
         <!-- Glow accents halus di background -->
-        <div class="pointer-events-none fixed -top-40 right-0 h-96 w-96 rounded-full bg-pink-500/10 dark:bg-pink-500/10 blur-3xl"></div>
-        <div class="pointer-events-none fixed top-1/2 -left-40 h-96 w-96 rounded-full bg-purple-500/10 dark:bg-purple-500/10 blur-3xl"></div>
+        <div
+            class="pointer-events-none fixed -top-40 right-0 h-96 w-96 rounded-full bg-pink-500/10 blur-3xl dark:bg-pink-500/10"
+        ></div>
+        <div
+            class="pointer-events-none fixed top-1/2 -left-40 h-96 w-96 rounded-full bg-purple-500/10 blur-3xl dark:bg-purple-500/10"
+        ></div>
 
         <!-- Top Header for Mobile (< lg) -->
-        <header class="lg:hidden sticky top-0 z-40 flex h-16 items-center justify-between border-b border-slate-200 dark:border-white/10 bg-white/80 dark:bg-[#090d16]/80 px-4 backdrop-blur-md">
+        <header
+            class="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-slate-200 bg-white/80 px-4 backdrop-blur-md lg:hidden dark:border-white/10 dark:bg-[#090d16]/80"
+        >
             <Link href="/dashboard" class="flex items-center">
                 <AppLogo />
             </Link>
@@ -131,7 +142,7 @@ const showMobileProfileModal = ref(false);
                 <button
                     v-if="canInstallPwa"
                     @click="installPwa"
-                    class="flex items-center gap-1.5 rounded-lg border border-pink-500/30 bg-pink-500/10 px-2.5 py-1.5 text-xs font-medium text-pink-600 dark:text-pink-400 hover:bg-pink-500/20 transition-all"
+                    class="flex items-center gap-1.5 rounded-lg border border-pink-500/30 bg-pink-500/10 px-2.5 py-1.5 text-xs font-medium text-pink-600 transition-all hover:bg-pink-500/20 dark:text-pink-400"
                 >
                     <Download class="size-3.5" />
                     <span>Install</span>
@@ -141,7 +152,9 @@ const showMobileProfileModal = ref(false);
 
         <div class="flex flex-1">
             <!-- Desktop Sidebar (lg:flex) -->
-            <aside class="hidden lg:flex w-64 flex-col border-r border-slate-200 dark:border-white/10 bg-white/85 dark:bg-[#0c121e]/80 backdrop-blur-md sticky top-0 h-screen p-4 justify-between z-30 transition-colors duration-200">
+            <aside
+                class="sticky top-0 z-30 hidden h-screen w-64 flex-col justify-between border-r border-slate-200 bg-white/85 p-4 backdrop-blur-md transition-colors duration-200 lg:flex dark:border-white/10 dark:bg-[#0c121e]/80"
+            >
                 <div class="space-y-6">
                     <div class="px-2 py-1">
                         <Link href="/dashboard">
@@ -154,10 +167,10 @@ const showMobileProfileModal = ref(false);
                         <Link
                             href="/dashboard"
                             :class="[
-                                'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all',
+                                'flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all',
                                 isNavActive('/dashboard')
-                                    ? 'bg-pink-500/15 text-pink-600 dark:text-pink-400 border border-pink-500/30 shadow-sm shadow-pink-500/10 font-semibold'
-                                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/5'
+                                    ? 'border border-pink-500/30 bg-pink-500/15 font-semibold text-pink-600 shadow-sm shadow-pink-500/10 dark:text-pink-400'
+                                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-white/5 dark:hover:text-slate-200',
                             ]"
                         >
                             <LayoutDashboard class="size-4" />
@@ -167,10 +180,10 @@ const showMobileProfileModal = ref(false);
                         <Link
                             href="/transactions"
                             :class="[
-                                'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all',
+                                'flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all',
                                 isNavActive('/transactions')
-                                    ? 'bg-pink-500/15 text-pink-600 dark:text-pink-400 border border-pink-500/30 shadow-sm shadow-pink-500/10 font-semibold'
-                                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/5'
+                                    ? 'border border-pink-500/30 bg-pink-500/15 font-semibold text-pink-600 shadow-sm shadow-pink-500/10 dark:text-pink-400'
+                                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-white/5 dark:hover:text-slate-200',
                             ]"
                         >
                             <ReceiptText class="size-4" />
@@ -180,10 +193,10 @@ const showMobileProfileModal = ref(false);
                         <Link
                             href="/budgets"
                             :class="[
-                                'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all',
+                                'flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all',
                                 isNavActive('/budgets')
-                                    ? 'bg-pink-500/15 text-pink-600 dark:text-pink-400 border border-pink-500/30 shadow-sm shadow-pink-500/10 font-semibold'
-                                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/5'
+                                    ? 'border border-pink-500/30 bg-pink-500/15 font-semibold text-pink-600 shadow-sm shadow-pink-500/10 dark:text-pink-400'
+                                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-white/5 dark:hover:text-slate-200',
                             ]"
                         >
                             <PieChart class="size-4" />
@@ -193,10 +206,10 @@ const showMobileProfileModal = ref(false);
                         <Link
                             href="/settings/profile"
                             :class="[
-                                'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all',
+                                'flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all',
                                 isNavActive('/settings')
-                                    ? 'bg-pink-500/15 text-pink-600 dark:text-pink-400 border border-pink-500/30 shadow-sm shadow-pink-500/10 font-semibold'
-                                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/5'
+                                    ? 'border border-pink-500/30 bg-pink-500/15 font-semibold text-pink-600 shadow-sm shadow-pink-500/10 dark:text-pink-400'
+                                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-white/5 dark:hover:text-slate-200',
                             ]"
                         >
                             <User class="size-4" />
@@ -208,7 +221,7 @@ const showMobileProfileModal = ref(false);
                     <div class="pt-2">
                         <button
                             @click="triggerAiModal"
-                            class="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 shadow-md shadow-pink-500/25 transition-all transform active:scale-95"
+                            class="flex w-full transform items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-pink-500 to-rose-600 px-3 py-2.5 text-sm font-semibold text-white shadow-md shadow-pink-500/25 transition-all hover:from-pink-600 hover:to-rose-700 active:scale-95"
                         >
                             <Sparkles class="size-4" />
                             <span>Catat Cepat (AI)</span>
@@ -216,11 +229,18 @@ const showMobileProfileModal = ref(false);
                     </div>
 
                     <!-- Install App PWA Banner (Desktop) -->
-                    <div v-if="canInstallPwa" class="rounded-xl border border-pink-500/20 bg-pink-500/5 p-3 text-center">
-                        <p class="text-xs text-slate-600 dark:text-slate-300 mb-2">Install aplikasi untuk akses cepat tanpa browser!</p>
+                    <div
+                        v-if="canInstallPwa"
+                        class="rounded-xl border border-pink-500/20 bg-pink-500/5 p-3 text-center"
+                    >
+                        <p
+                            class="mb-2 text-xs text-slate-600 dark:text-slate-300"
+                        >
+                            Install aplikasi untuk akses cepat tanpa browser!
+                        </p>
                         <button
                             @click="installPwa"
-                            class="inline-flex items-center justify-center gap-1.5 w-full py-1.5 rounded-lg bg-pink-500 text-xs font-semibold text-white hover:bg-pink-600 transition"
+                            class="inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-pink-500 py-1.5 text-xs font-semibold text-white transition hover:bg-pink-600"
                         >
                             <Download class="size-3.5" />
                             <span>Install App</span>
@@ -229,15 +249,34 @@ const showMobileProfileModal = ref(false);
                 </div>
 
                 <!-- Footer user profile & Logout (Desktop) -->
-                <div class="border-t border-slate-200 dark:border-white/10 pt-3">
-                    <div class="flex items-center justify-between p-2 rounded-xl bg-slate-100/80 dark:bg-slate-900/60 border border-slate-200/80 dark:border-white/5">
-                        <Link href="/settings/profile" class="flex items-center gap-2.5 overflow-hidden flex-1 group">
-                            <div class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-pink-500/20 text-pink-600 dark:text-pink-400 font-bold text-xs uppercase group-hover:bg-pink-500/30 transition">
-                                {{ authUser?.name ? authUser.name.charAt(0) : 'U' }}
+                <div
+                    class="border-t border-slate-200 pt-3 dark:border-white/10"
+                >
+                    <div
+                        class="flex items-center justify-between rounded-xl border border-slate-200/80 bg-slate-100/80 p-2 dark:border-white/5 dark:bg-slate-900/60"
+                    >
+                        <Link
+                            href="/settings/profile"
+                            class="group flex flex-1 items-center gap-2.5 overflow-hidden"
+                        >
+                            <div
+                                class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-pink-500/20 text-xs font-bold text-pink-600 uppercase transition group-hover:bg-pink-500/30 dark:text-pink-400"
+                            >
+                                {{
+                                    authUser?.name
+                                        ? authUser.name.charAt(0)
+                                        : 'U'
+                                }}
                             </div>
                             <div class="truncate text-left text-xs">
-                                <p class="font-medium text-slate-900 dark:text-slate-200 truncate group-hover:text-pink-600 dark:group-hover:text-pink-400 transition">{{ authUser?.name || 'User' }}</p>
-                                <p class="text-[10px] text-slate-500 truncate">{{ authUser?.email || '' }}</p>
+                                <p
+                                    class="truncate font-medium text-slate-900 transition group-hover:text-pink-600 dark:text-slate-200 dark:group-hover:text-pink-400"
+                                >
+                                    {{ authUser?.name || 'User' }}
+                                </p>
+                                <p class="truncate text-[10px] text-slate-500">
+                                    {{ authUser?.email || '' }}
+                                </p>
                             </div>
                         </Link>
 
@@ -245,7 +284,7 @@ const showMobileProfileModal = ref(false);
                             href="/logout"
                             method="post"
                             as="button"
-                            class="text-slate-400 hover:text-rose-500 p-1.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 transition shrink-0 ml-1"
+                            class="ml-1 shrink-0 rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-200 hover:text-rose-500 dark:hover:bg-slate-800"
                             title="Keluar"
                         >
                             <LogOut class="size-4" />
@@ -255,20 +294,24 @@ const showMobileProfileModal = ref(false);
             </aside>
 
             <!-- Main Content Area -->
-            <main class="flex-1 flex flex-col min-w-0 pb-24 lg:pb-8">
-                <div class="p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">
+            <main class="flex min-w-0 flex-1 flex-col pb-24 lg:pb-8">
+                <div class="mx-auto w-full max-w-7xl p-4 sm:p-6 lg:p-8">
                     <slot />
                 </div>
             </main>
         </div>
 
         <!-- Mobile Bottom Navigation Bar (< lg) -->
-        <nav class="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/90 dark:bg-slate-950/90 backdrop-blur-lg border-t border-slate-200 dark:border-white/10 px-4 py-2 flex items-center justify-around">
+        <nav
+            class="fixed right-0 bottom-0 left-0 z-40 flex items-center justify-around border-t border-slate-200 bg-white/90 px-4 py-2 backdrop-blur-lg lg:hidden dark:border-white/10 dark:bg-slate-950/90"
+        >
             <Link
                 href="/dashboard"
                 :class="[
                     'flex flex-col items-center gap-1 text-xs transition-colors',
-                    isNavActive('/dashboard') ? 'text-pink-600 dark:text-pink-400 font-semibold' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+                    isNavActive('/dashboard')
+                        ? 'font-semibold text-pink-600 dark:text-pink-400'
+                        : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200',
                 ]"
             >
                 <LayoutDashboard class="size-5" />
@@ -279,7 +322,9 @@ const showMobileProfileModal = ref(false);
                 href="/transactions"
                 :class="[
                     'flex flex-col items-center gap-1 text-xs transition-colors',
-                    isNavActive('/transactions') ? 'text-pink-600 dark:text-pink-400 font-semibold' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+                    isNavActive('/transactions')
+                        ? 'font-semibold text-pink-600 dark:text-pink-400'
+                        : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200',
                 ]"
             >
                 <ReceiptText class="size-5" />
@@ -290,19 +335,24 @@ const showMobileProfileModal = ref(false);
             <div class="-mt-6 flex flex-col items-center">
                 <button
                     @click="triggerAiModal"
-                    class="flex size-13 items-center justify-center rounded-full bg-gradient-to-r from-pink-500 to-rose-600 text-white shadow-lg shadow-pink-500/40 ring-4 ring-slate-50 dark:ring-[#090d16] active:scale-95 transition-transform"
+                    class="flex size-13 items-center justify-center rounded-full bg-gradient-to-r from-pink-500 to-rose-600 text-white shadow-lg ring-4 shadow-pink-500/40 ring-slate-50 transition-transform active:scale-95 dark:ring-[#090d16]"
                     title="Catat AI"
                 >
                     <Sparkles class="size-6" />
                 </button>
-                <span class="text-[10px] font-semibold text-pink-600 dark:text-pink-400 mt-1">Catat AI</span>
+                <span
+                    class="mt-1 text-[10px] font-semibold text-pink-600 dark:text-pink-400"
+                    >Catat AI</span
+                >
             </div>
 
             <Link
                 href="/budgets"
                 :class="[
                     'flex flex-col items-center gap-1 text-xs transition-colors',
-                    isNavActive('/budgets') ? 'text-pink-600 dark:text-pink-400 font-semibold' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+                    isNavActive('/budgets')
+                        ? 'font-semibold text-pink-600 dark:text-pink-400'
+                        : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200',
                 ]"
             >
                 <PieChart class="size-5" />
@@ -314,7 +364,9 @@ const showMobileProfileModal = ref(false);
                 @click="showMobileProfileModal = true"
                 :class="[
                     'flex flex-col items-center gap-1 text-xs transition-colors',
-                    isNavActive('/settings') || showMobileProfileModal ? 'text-pink-600 dark:text-pink-400 font-semibold' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+                    isNavActive('/settings') || showMobileProfileModal
+                        ? 'font-semibold text-pink-600 dark:text-pink-400'
+                        : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200',
                 ]"
             >
                 <User class="size-5" />
@@ -325,24 +377,38 @@ const showMobileProfileModal = ref(false);
         <!-- Mobile Profile Bottom Sheet / Modal -->
         <div
             v-if="showMobileProfileModal"
-            class="lg:hidden fixed inset-0 z-50 flex flex-col justify-end bg-black/70 backdrop-blur-sm transition-opacity"
+            class="fixed inset-0 z-50 flex flex-col justify-end bg-black/70 backdrop-blur-sm transition-opacity lg:hidden"
             @click.self="showMobileProfileModal = false"
         >
-            <div class="w-full rounded-t-3xl border-t border-slate-200 dark:border-white/10 bg-white dark:bg-[#0c121e] p-6 shadow-2xl space-y-4 animate-in slide-in-from-bottom duration-200">
+            <div
+                class="w-full animate-in space-y-4 rounded-t-3xl border-t border-slate-200 bg-white p-6 shadow-2xl duration-200 slide-in-from-bottom dark:border-white/10 dark:bg-[#0c121e]"
+            >
                 <!-- Handle bar & Header -->
-                <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-white/10">
+                <div
+                    class="flex items-center justify-between border-b border-slate-200 pb-3 dark:border-white/10"
+                >
                     <div class="flex items-center gap-3">
-                        <div class="flex size-11 items-center justify-center rounded-xl bg-gradient-to-tr from-pink-500 to-rose-500 text-white font-bold text-base shadow-md shadow-pink-500/25">
+                        <div
+                            class="flex size-11 items-center justify-center rounded-xl bg-gradient-to-tr from-pink-500 to-rose-500 text-base font-bold text-white shadow-md shadow-pink-500/25"
+                        >
                             {{ authUser?.name ? authUser.name.charAt(0) : 'U' }}
                         </div>
                         <div>
-                            <h3 class="font-bold text-base text-slate-900 dark:text-white leading-tight">{{ authUser?.name || 'User' }}</h3>
-                            <p class="text-xs text-slate-500 dark:text-slate-400">{{ authUser?.email || '' }}</p>
+                            <h3
+                                class="text-base leading-tight font-bold text-slate-900 dark:text-white"
+                            >
+                                {{ authUser?.name || 'User' }}
+                            </h3>
+                            <p
+                                class="text-xs text-slate-500 dark:text-slate-400"
+                            >
+                                {{ authUser?.email || '' }}
+                            </p>
                         </div>
                     </div>
                     <button
                         @click="showMobileProfileModal = false"
-                        class="p-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                        class="rounded-full bg-slate-100 p-1.5 text-slate-500 hover:text-slate-900 dark:bg-slate-800 dark:text-slate-400 dark:hover:text-white"
                     >
                         <X class="size-4" />
                     </button>
@@ -353,7 +419,7 @@ const showMobileProfileModal = ref(false);
                     <Link
                         href="/settings/profile"
                         @click="showMobileProfileModal = false"
-                        class="flex items-center gap-3 w-full p-3 rounded-xl bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-white/5 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800 transition"
+                        class="flex w-full items-center gap-3 rounded-xl border border-slate-200/80 bg-slate-100/80 p-3 text-sm font-medium text-slate-700 transition hover:bg-slate-200 dark:border-white/5 dark:bg-slate-900/80 dark:text-slate-200 dark:hover:bg-slate-800"
                     >
                         <User class="size-4 text-pink-500" />
                         <span>Edit Profil Akun</span>
@@ -362,7 +428,7 @@ const showMobileProfileModal = ref(false);
                     <Link
                         href="/settings/security"
                         @click="showMobileProfileModal = false"
-                        class="flex items-center gap-3 w-full p-3 rounded-xl bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-white/5 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800 transition"
+                        class="flex w-full items-center gap-3 rounded-xl border border-slate-200/80 bg-slate-100/80 p-3 text-sm font-medium text-slate-700 transition hover:bg-slate-200 dark:border-white/5 dark:bg-slate-900/80 dark:text-slate-200 dark:hover:bg-slate-800"
                     >
                         <Settings class="size-4 text-pink-500" />
                         <span>Keamanan & Password</span>
@@ -371,7 +437,7 @@ const showMobileProfileModal = ref(false);
                     <Link
                         href="/settings/appearance"
                         @click="showMobileProfileModal = false"
-                        class="flex items-center gap-3 w-full p-3 rounded-xl bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-white/5 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800 transition"
+                        class="flex w-full items-center gap-3 rounded-xl border border-slate-200/80 bg-slate-100/80 p-3 text-sm font-medium text-slate-700 transition hover:bg-slate-200 dark:border-white/5 dark:bg-slate-900/80 dark:text-slate-200 dark:hover:bg-slate-800"
                     >
                         <Sparkles class="size-4 text-pink-500" />
                         <span>Tema & Tampilan (Light / Dark)</span>
@@ -379,12 +445,14 @@ const showMobileProfileModal = ref(false);
                 </div>
 
                 <!-- Tombol Keluar (Logout) Terintegrasi di Menu Profil HP -->
-                <div class="pt-2 border-t border-slate-200 dark:border-white/10">
+                <div
+                    class="border-t border-slate-200 pt-2 dark:border-white/10"
+                >
                     <Link
                         href="/logout"
                         method="post"
                         as="button"
-                        class="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-rose-500/10 dark:bg-rose-500/15 border border-rose-500/30 text-sm font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-500/20 transition active:scale-98"
+                        class="flex w-full items-center justify-center gap-2 rounded-xl border border-rose-500/30 bg-rose-500/10 py-3 text-sm font-semibold text-rose-600 transition hover:bg-rose-500/20 active:scale-98 dark:bg-rose-500/15 dark:text-rose-400"
                     >
                         <LogOut class="size-4" />
                         <span>Keluar dari Akun (Logout)</span>
@@ -394,37 +462,61 @@ const showMobileProfileModal = ref(false);
         </div>
 
         <!-- Quick AI Modal / Drawer -->
-        <div v-if="showQuickAiModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-            <div class="w-full max-w-lg rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#0f172a] p-6 shadow-2xl relative">
-                <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-white/10">
+        <div
+            v-if="showQuickAiModal"
+            class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
+        >
+            <div
+                class="relative w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl dark:border-white/10 dark:bg-[#0f172a]"
+            >
+                <div
+                    class="flex items-center justify-between border-b border-slate-200 pb-3 dark:border-white/10"
+                >
                     <div class="flex items-center gap-2">
-                        <div class="p-2 rounded-xl bg-pink-500/15 text-pink-500">
+                        <div
+                            class="rounded-xl bg-pink-500/15 p-2 text-pink-500"
+                        >
                             <Sparkles class="size-5" />
                         </div>
                         <div>
-                            <h3 class="font-bold text-base text-slate-900 dark:text-white">Smart AI Transaction Parser</h3>
-                            <p class="text-xs text-slate-500 dark:text-slate-400">Ketik bebas dalam Bahasa Indonesia</p>
+                            <h3
+                                class="text-base font-bold text-slate-900 dark:text-white"
+                            >
+                                Smart AI Transaction Parser
+                            </h3>
+                            <p
+                                class="text-xs text-slate-500 dark:text-slate-400"
+                            >
+                                Ketik bebas dalam Bahasa Indonesia
+                            </p>
                         </div>
                     </div>
                     <button
                         @click="showQuickAiModal = false"
-                        class="text-slate-400 hover:text-slate-700 dark:hover:text-white text-lg font-semibold px-2 py-1"
+                        class="px-2 py-1 text-lg font-semibold text-slate-400 hover:text-slate-700 dark:hover:text-white"
                     >
                         ✕
                     </button>
                 </div>
 
                 <div class="mt-4 space-y-3">
-                    <label class="text-xs text-slate-600 dark:text-slate-300 font-medium">Contoh: "Beli ayam geprek 18rb pakai QRIS" atau "Gaji bulanan 6.5jt"</label>
+                    <label
+                        class="text-xs font-medium text-slate-600 dark:text-slate-300"
+                        >Contoh: "Beli ayam geprek 18rb pakai QRIS" atau "Gaji
+                        bulanan 6.5jt"</label
+                    >
                     <textarea
                         v-model="quickPrompt"
                         rows="3"
-                        class="w-full rounded-xl border border-slate-300 dark:border-white/10 bg-slate-50 dark:bg-slate-900/80 p-3 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:border-pink-500 focus:ring-1 focus:ring-pink-500 outline-none transition"
+                        class="w-full rounded-xl border border-slate-300 bg-slate-50 p-3 text-sm text-slate-900 placeholder-slate-400 transition outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 dark:border-white/10 dark:bg-slate-900/80 dark:text-slate-100 dark:placeholder-slate-500"
                         placeholder="Ketik transaksi Anda di sini..."
                         :disabled="isSubmittingAi"
                     ></textarea>
 
-                    <div v-if="aiError" class="p-3 rounded-lg bg-rose-500/15 border border-rose-500/30 text-rose-500 dark:text-rose-300 text-xs">
+                    <div
+                        v-if="aiError"
+                        class="rounded-lg border border-rose-500/30 bg-rose-500/15 p-3 text-xs text-rose-500 dark:text-rose-300"
+                    >
                         {{ aiError }}
                     </div>
 
@@ -432,7 +524,7 @@ const showMobileProfileModal = ref(false);
                         <button
                             type="button"
                             @click="showQuickAiModal = false"
-                            class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition"
+                            class="rounded-xl bg-slate-100 px-4 py-2 text-xs font-semibold text-slate-600 transition hover:bg-slate-200 hover:text-slate-900 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-white"
                             :disabled="isSubmittingAi"
                         >
                             Batal
@@ -441,11 +533,18 @@ const showMobileProfileModal = ref(false);
                             type="button"
                             @click="submitQuickAi"
                             :disabled="isSubmittingAi || !quickPrompt.trim()"
-                            class="flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-semibold text-white bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 disabled:opacity-50 shadow-md shadow-pink-500/30 transition transform active:scale-95"
+                            class="flex transform items-center gap-2 rounded-xl bg-gradient-to-r from-pink-500 to-rose-600 px-5 py-2 text-xs font-semibold text-white shadow-md shadow-pink-500/30 transition hover:from-pink-600 hover:to-rose-700 active:scale-95 disabled:opacity-50"
                         >
-                            <span v-if="isSubmittingAi" class="animate-spin inline-block size-3.5 border-2 border-white border-t-transparent rounded-full"></span>
+                            <span
+                                v-if="isSubmittingAi"
+                                class="inline-block size-3.5 animate-spin rounded-full border-2 border-white border-t-transparent"
+                            ></span>
                             <Sparkles v-else class="size-3.5" />
-                            <span>{{ isSubmittingAi ? 'Memproses AI...' : 'Simpan Transaksi' }}</span>
+                            <span>{{
+                                isSubmittingAi
+                                    ? 'Memproses AI...'
+                                    : 'Simpan Transaksi'
+                            }}</span>
                         </button>
                     </div>
                 </div>

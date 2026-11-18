@@ -5,15 +5,25 @@ import { Sparkles, Wallet } from '@lucide/vue';
 <template>
     <div class="flex items-center gap-2.5">
         <div
-            class="flex size-9 items-center justify-center rounded-xl bg-gradient-to-tr from-pink-500 to-rose-500 shadow-md shadow-pink-500/25 ring-1 ring-white/20"
+            class="flex size-9 items-center justify-center rounded-xl bg-gradient-to-tr from-pink-500 to-rose-500 shadow-md ring-1 shadow-pink-500/25 ring-white/20"
         >
             <Wallet class="size-5 text-white" />
         </div>
         <div class="flex flex-col text-left">
-            <span class="text-base font-bold tracking-tight text-pink-600 dark:text-white flex items-center gap-1.5 transition-colors">
-                KelolaUang <span class="text-pink-500 dark:text-pink-400 font-extrabold flex items-center">AI <Sparkles class="size-3.5 ml-0.5 inline text-pink-500 dark:text-pink-400" /></span>
+            <span
+                class="flex items-center gap-1.5 text-base font-bold tracking-tight text-pink-600 transition-colors dark:text-white"
+            >
+                KelolaUang
+                <span
+                    class="flex items-center font-extrabold text-pink-500 dark:text-pink-400"
+                    >AI
+                    <Sparkles
+                        class="ml-0.5 inline size-3.5 text-pink-500 dark:text-pink-400"
+                /></span>
             </span>
-            <span class="text-[10px] -mt-1 font-medium text-slate-500 dark:text-slate-400 tracking-wider uppercase">
+            <span
+                class="-mt-1 text-[10px] font-medium tracking-wider text-slate-500 uppercase dark:text-slate-400"
+            >
                 Smart Personal Finance
             </span>
         </div>

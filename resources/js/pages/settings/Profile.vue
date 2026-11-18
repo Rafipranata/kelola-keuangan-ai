@@ -94,13 +94,17 @@ const user = computed(() => page.props.auth.user);
                     v-if="page.props.status === 'verification-link-sent'"
                     class="mt-2 text-sm font-medium text-green-600"
                 >
-                    Tautan verifikasi baru telah dikirimkan ke alamat email Anda.
+                    Tautan verifikasi baru telah dikirimkan ke alamat email
+                    Anda.
                 </div>
             </div>
             <!-- @end-chisel-email-verification -->
 
             <div class="flex items-center gap-4">
-                <Button :disabled="processing" class="bg-pink-500 hover:bg-pink-600 text-white shadow-md shadow-pink-500/25" data-test="update-profile-button"
+                <Button
+                    :disabled="processing"
+                    class="bg-pink-500 text-white shadow-md shadow-pink-500/25 hover:bg-pink-600"
+                    data-test="update-profile-button"
                     >Simpan Perubahan</Button
                 >
             </div>
