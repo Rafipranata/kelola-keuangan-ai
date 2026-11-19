@@ -92,15 +92,26 @@ class DashboardController extends Controller
             ->selectRaw('categories.id, categories.nama, categories.ikon, categories.warna, SUM(transactions.nominal) as total')
             ->groupBy('categories.id', 'categories.nama', 'categories.ikon', 'categories.warna')
             ->orderByDesc('total')
-            ->get()
-            ->map(fn ($item) => [
-                'id' => $item->id,
-                'nama' => $item->nama,
-                'ikon' => $item->ikon,
-                'warna' => $item->warna,
-                'total' => (float) $item->total,
-                'persentase' => $monthlyExpenses > 0 ? round(((float) $item->total / $monthlyExpenses) * 100, 1) : 0,
-            ]);
+            ->get();
+        $results = Transaction::where('transactions.user_id', $user->id)
+            ->whereYear('transactions.tanggal_transaksi', $tahun)
+            ->whereMonth('transactions.tanggal_transaksi', $bulan)
+            ->join('categories', 'transactions.category_id', '=', 'categories.id')
+            ->where('categories.tipe', 'expense')
+            ->selectRaw('categories.id, categories.nama, categories.ikon, categories.warna, SUM(transactions.nominal) as total')
+            ->groupBy('categories.id', 'categories.nama', 'categories.ikon', 'categories.warna')
+            ->orderByDesc('total')
+            ->get();
+
+        /** @var \Illuminate\Support\Collection<int, object> $results */
+        $expenseByCategory = $results->map(fn (object $item) => [
+            'id' => $item->id,
+            'nama' => $item->nama,
+            'ikon' => $item->ikon,
+            'warna' => $item->warna,
+            'total' => (float) $item->total,
+            'persentase' => $monthlyExpenses > 0 ? round(((float) $item->total / $monthlyExpenses) * 100, 1) : 0,
+        ]);
 
         // 10 Transaksi terbaru
         $recentTransactions = Transaction::with('category')

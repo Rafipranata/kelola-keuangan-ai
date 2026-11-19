@@ -100,7 +100,7 @@ INSTRUCTION;
             }
 
             // Defaults fallback
-            $parsedData['nominal'] = (float) ($parsedData['nominal'] ?? 0);
+            $parsedData['nominal'] = (float) $parsedData['nominal'];
             $parsedData['tipe'] = in_array(strtolower($parsedData['tipe'] ?? ''), ['income', 'expense']) ? strtolower($parsedData['tipe']) : 'expense';
             $parsedData['deskripsi'] = $parsedData['deskripsi'] ?? $promptText;
             $parsedData['metode_pembayaran'] = $parsedData['metode_pembayaran'] ?? 'Cash';

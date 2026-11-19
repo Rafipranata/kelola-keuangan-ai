@@ -2,10 +2,24 @@
 
 namespace App\Models;
 
+use Database\Factories\TransactionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property int $id
+ * @property int $user_id
+ * @property int $category_id
+ * @property float $nominal
+ * @property string $deskripsi
+ * @property Carbon $tanggal_transaksi
+ * @property string $metode_pembayaran
+ * @property bool $is_ai_generated
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ */
 class Transaction extends Model
 {
     use HasFactory;
@@ -28,11 +42,13 @@ class Transaction extends Model
         'category_id' => 'integer',
     ];
 
+    /** @return BelongsTo<User, Transaction> */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
+    /** @return BelongsTo<Category, Transaction> */
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
