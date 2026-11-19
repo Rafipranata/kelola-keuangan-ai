@@ -8,7 +8,6 @@ use App\Models\Category;
 use App\Models\Transaction;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -48,7 +47,7 @@ class TransactionController extends Controller
         if (! empty($search)) {
             $query->where(function ($q) use ($search) {
                 $q->where('deskripsi', 'like', "%{$search}%")
-                  ->orWhere('metode_pembayaran', 'like', "%{$search}%");
+                    ->orWhere('metode_pembayaran', 'like', "%{$search}%");
             });
         }
 

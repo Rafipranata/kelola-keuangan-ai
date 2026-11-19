@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 class GeminiFinanceService
 {
     protected ?string $apiKey;
+
     protected string $model;
 
     public function __construct()
@@ -21,9 +22,8 @@ class GeminiFinanceService
     /**
      * Parse natural language transaction text into structured data.
      *
-     * @param string $promptText
-     * @param array $availableCategories Array of category names or associative array
-     * @return array
+     * @param  array  $availableCategories  Array of category names or associative array
+     *
      * @throws Exception
      */
     public function parseTransaction(string $promptText, array $availableCategories): array
@@ -82,8 +82,8 @@ INSTRUCTION;
 
             if ($response->failed()) {
                 $errorMsg = $response->json('error.message') ?? $response->body();
-                Log::error('Gemini API Error: ' . $errorMsg);
-                throw new Exception('Gagal menghubungi Gemini API: ' . ($response->json('error.message') ?? 'Terjadi kesalahan pada layanan AI'));
+                Log::error('Gemini API Error: '.$errorMsg);
+                throw new Exception('Gagal menghubungi Gemini API: '.($response->json('error.message') ?? 'Terjadi kesalahan pada layanan AI'));
             }
 
             $result = $response->json();
@@ -108,7 +108,7 @@ INSTRUCTION;
 
             return $parsedData;
         } catch (Exception $e) {
-            Log::error('GeminiFinanceService parseTransaction exception: ' . $e->getMessage());
+            Log::error('GeminiFinanceService parseTransaction exception: '.$e->getMessage());
             throw $e;
         }
     }
@@ -116,8 +116,6 @@ INSTRUCTION;
     /**
      * Generate personal financial advice based on monthly aggregate summary.
      *
-     * @param array $financialSummary
-     * @return string
      * @throws Exception
      */
     public function generateFinancialAdvice(array $financialSummary): string
@@ -169,8 +167,8 @@ PROMPT;
 
             if ($response->failed()) {
                 $errorMsg = $response->json('error.message') ?? $response->body();
-                Log::error('Gemini API Error: ' . $errorMsg);
-                throw new Exception('Gagal menghubungi Gemini API: ' . ($response->json('error.message') ?? 'Terjadi kesalahan pada layanan AI'));
+                Log::error('Gemini API Error: '.$errorMsg);
+                throw new Exception('Gagal menghubungi Gemini API: '.($response->json('error.message') ?? 'Terjadi kesalahan pada layanan AI'));
             }
 
             $result = $response->json();
@@ -182,7 +180,7 @@ PROMPT;
 
             return $advice;
         } catch (Exception $e) {
-            Log::error('GeminiFinanceService generateFinancialAdvice exception: ' . $e->getMessage());
+            Log::error('GeminiFinanceService generateFinancialAdvice exception: '.$e->getMessage());
             throw $e;
         }
     }

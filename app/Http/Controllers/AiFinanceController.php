@@ -118,7 +118,7 @@ class AiFinanceController extends Controller
             ->orderByDesc('total')
             ->take(3)
             ->get()
-            ->map(fn ($c) => $c->nama . ': Rp ' . number_format((float) $c->total, 0, ',', '.'))
+            ->map(fn ($c) => $c->nama.': Rp '.number_format((float) $c->total, 0, ',', '.'))
             ->toArray();
 
         // Budget status
@@ -137,7 +137,7 @@ class AiFinanceController extends Controller
                 ->sum('nominal');
 
             $pct = $b->batas_anggaran > 0 ? round(($spent / $b->batas_anggaran) * 100) : 0;
-            $budgetStatus[] = "{$b->category->nama}: Terpakai Rp " . number_format($spent, 0, ',', '.') . " / Limit Rp " . number_format((float) $b->batas_anggaran, 0, ',', '.') . " ({$pct}%)";
+            $budgetStatus[] = "{$b->category->nama}: Terpakai Rp ".number_format($spent, 0, ',', '.').' / Limit Rp '.number_format((float) $b->batas_anggaran, 0, ',', '.')." ({$pct}%)";
         }
 
         $summary = [
