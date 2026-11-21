@@ -21,8 +21,11 @@ class GeminiFinanceService
 
     /**
      * Parse natural language transaction text into structured data.
+     * Mendukung single transaction (objek) maupun multiple transactions (array).
      *
+     * @param  string  $promptText
      * @param  array  $availableCategories  Array of category names or associative array
+     * @return array Array of transactions
      *
      * @throws Exception
      */
@@ -37,22 +40,35 @@ class GeminiFinanceService
 
         $systemInstruction = <<<INSTRUCTION
 Anda adalah asisten pencatat keuangan cerdas (Smart AI Financial Parser) Bahasa Indonesia.
-Tugas Anda adalah mengekstrak teks transaksi bebas dari pengguna ke dalam format JSON yang tepat.
+Tugas Anda adalah mengekstrak teks transaksi dari pengguna ke dalam format JSON.
+Pengguna bisa menyebutkan 1 transaksi MAUPUN LEBIH DARI 1 transaksi sekaligus (contoh: "beli bensin 100000 dan beli kopi 5000").
 
-Gunakan format JSON berikut:
-{
-  "nominal": 18000,
-  "tipe": "expense", // atau "income"
-  "kategori": "Makan & Minum",
-  "deskripsi": "Makan ayam geprek",
-  "metode_pembayaran": "QRIS", // default "Cash" jika tidak disebutkan, bisa juga "QRIS", "Transfer Bank", "E-Wallet"
-  "tanggal_transaksi": "{$today}" // format YYYY-MM-DD. Gunakan tanggal hari ini ({$today}) jika tidak disebutkan atau jika "hari ini", sesuaikan jika "kemarin", dsb.
-}
+SELALU kembalikan dalam bentuk ARRAY OF OBJECTS (daftar transaksi) dengan struktur:
+[
+  {
+    "nominal": 100000,
+    "tipe": "expense", // atau "income"
+    "kategori": "Transportasi",
+    "deskripsi": "Beli bensin",
+    "metode_pembayaran": "Cash", // "Cash", "QRIS", "Transfer Bank", "E-Wallet"
+    "tanggal_transaksi": "{$today}" // format YYYY-MM-DD
+  },
+  {
+    "nominal": 5000,
+    "tipe": "expense",
+    "kategori": "Makan & Minum",
+    "deskripsi": "Beli kopi",
+    "metode_pembayaran": "Cash",
+    "tanggal_transaksi": "{$today}"
+  }
+]
 
-Pilihan kategori yang tersedia di database: [{$categoryListString}].
-Cocokkan 'kategori' dengan nama yang paling mendekati dari daftar kategori yang tersedia di atas.
-Tipe harus salah satu dari: "income" (pemasukan/gaji/saku/bonus/terima uang) atau "expense" (pengeluaran/beli/bayar).
-Nominal harus berupa angka integer tanpa titik atau koma mata uang (contoh: 18rb/18k -> 18000, 2.5jt -> 2500000).
+Aturan:
+1. Jika pengguna hanya menyebutkan 1 transaksi, tetap kembalikan dalam array berisi 1 objek [ { ... } ].
+2. Pilihan kategori yang tersedia di database: [{$categoryListString}].
+3. Cocokkan 'kategori' dengan nama yang paling mendekati dari daftar kategori di atas.
+4. Tipe harus: "income" (pemasukan/gaji/saku/bonus/terima uang) atau "expense" (pengeluaran/beli/bayar).
+5. Nominal harus berupa angka integer murni tanpa titik atau koma (contoh: 100000, 18rb/18k -> 18000, 2.5jt -> 2500000).
 INSTRUCTION;
 
         $url = "https://generativelanguage.googleapis.com/v1beta/models/{$this->model}:generateContent?key={$this->apiKey}";
@@ -95,18 +111,45 @@ INSTRUCTION;
 
             $parsedData = json_decode($rawJson, true);
 
-            if (! is_array($parsedData) || ! isset($parsedData['nominal'])) {
+            // Jika AI mengembalikan single object { ... }, bungkus ke array [ { ... } ]
+            if (is_array($parsedData) && isset($parsedData['nominal'])) {
+                $items = [$parsedData];
+            } elseif (is_array($parsedData) && isset($parsedData['transactions']) && is_array($parsedData['transactions'])) {
+                $items = $parsedData['transactions'];
+            } elseif (is_array($parsedData) && isset($parsedData['data']) && is_array($parsedData['data'])) {
+                $items = $parsedData['data'];
+            } elseif (is_array($parsedData)) {
+                $items = $parsedData;
+            } else {
                 throw new Exception('Format hasil AI tidak valid.');
             }
 
-            // Defaults fallback
-            $parsedData['nominal'] = (float) $parsedData['nominal'];
-            $parsedData['tipe'] = in_array(strtolower($parsedData['tipe'] ?? ''), ['income', 'expense']) ? strtolower($parsedData['tipe']) : 'expense';
-            $parsedData['deskripsi'] = $parsedData['deskripsi'] ?? $promptText;
-            $parsedData['metode_pembayaran'] = $parsedData['metode_pembayaran'] ?? 'Cash';
-            $parsedData['tanggal_transaksi'] = ! empty($parsedData['tanggal_transaksi']) ? $parsedData['tanggal_transaksi'] : $today;
+            $normalizedItems = [];
+            foreach ($items as $item) {
+                if (! is_array($item) || ! isset($item['nominal'])) {
+                    continue;
+                }
 
-            return $parsedData;
+                $nominal = (float) $item['nominal'];
+                if ($nominal <= 0) {
+                    continue;
+                }
+
+                $normalizedItems[] = [
+                    'nominal' => $nominal,
+                    'tipe' => in_array(strtolower($item['tipe'] ?? ''), ['income', 'expense']) ? strtolower($item['tipe']) : 'expense',
+                    'kategori' => $item['kategori'] ?? '',
+                    'deskripsi' => $item['deskripsi'] ?? $promptText,
+                    'metode_pembayaran' => $item['metode_pembayaran'] ?? 'Cash',
+                    'tanggal_transaksi' => ! empty($item['tanggal_transaksi']) ? $item['tanggal_transaksi'] : $today,
+                ];
+            }
+
+            if (empty($normalizedItems)) {
+                throw new Exception('AI tidak dapat menemukan transaksi yang valid dari teks tersebut.');
+            }
+
+            return $normalizedItems;
         } catch (Exception $e) {
             Log::error('GeminiFinanceService parseTransaction exception: '.$e->getMessage());
             throw $e;

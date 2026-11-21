@@ -19,6 +19,7 @@ class AiFinanceController extends Controller
 
     /**
      * Parse free text transaction with Gemini and save to transactions table.
+     * Mendukung multi-transaksi sekaligus (misal: "beli bensin 100rb dan beli kopi 5rb").
      */
     public function parseTransaction(Request $request): JsonResponse
     {
@@ -37,45 +38,56 @@ class AiFinanceController extends Controller
         $categoryNames = $categories->pluck('nama')->toArray();
 
         try {
-            $parsed = $this->geminiService->parseTransaction($prompt, $categoryNames);
+            $parsedItems = $this->geminiService->parseTransaction($prompt, $categoryNames);
 
-            // Cocokkan nama kategori dengan database
-            $matchedCategory = $categories->first(function ($cat) use ($parsed) {
-                return strcasecmp($cat->nama, $parsed['kategori'] ?? '') === 0;
-            });
+            $savedTransactions = [];
 
-            // Jika tidak cocok persis, cari berdasarkan substring atau tipe
-            if (! $matchedCategory) {
+            foreach ($parsedItems as $parsed) {
+                // Cocokkan nama kategori dengan database
                 $matchedCategory = $categories->first(function ($cat) use ($parsed) {
-                    return stripos($cat->nama, $parsed['kategori'] ?? '') !== false
-                        || stripos($parsed['kategori'] ?? '', $cat->nama) !== false;
+                    return strcasecmp($cat->nama, $parsed['kategori'] ?? '') === 0;
                 });
+
+                // Jika tidak cocok persis, cari berdasarkan substring atau tipe
+                if (! $matchedCategory) {
+                    $matchedCategory = $categories->first(function ($cat) use ($parsed) {
+                        return stripos($cat->nama, $parsed['kategori'] ?? '') !== false
+                            || stripos($parsed['kategori'] ?? '', $cat->nama) !== false;
+                    });
+                }
+
+                // Fallback kategori berdasarkan tipe
+                if (! $matchedCategory) {
+                    $tipe = $parsed['tipe'] ?? 'expense';
+                    $matchedCategory = $categories->firstWhere('tipe', $tipe) ?? $categories->first();
+                }
+
+                // Simpan transaksi
+                $transaction = Transaction::create([
+                    'user_id' => $user->id,
+                    'category_id' => $matchedCategory->id,
+                    'nominal' => $parsed['nominal'],
+                    'deskripsi' => $parsed['deskripsi'] ?? $prompt,
+                    'tanggal_transaksi' => $parsed['tanggal_transaksi'] ?? Carbon::now()->format('Y-m-d'),
+                    'metode_pembayaran' => $parsed['metode_pembayaran'] ?? 'Cash',
+                    'is_ai_generated' => true,
+                ]);
+
+                $transaction->load('category');
+                $savedTransactions[] = $transaction;
             }
 
-            // Fallback kategori berdasarkan tipe
-            if (! $matchedCategory) {
-                $tipe = $parsed['tipe'] ?? 'expense';
-                $matchedCategory = $categories->firstWhere('tipe', $tipe) ?? $categories->first();
-            }
-
-            // Simpan transaksi otomatis
-            $transaction = Transaction::create([
-                'user_id' => $user->id,
-                'category_id' => $matchedCategory->id,
-                'nominal' => $parsed['nominal'],
-                'deskripsi' => $parsed['deskripsi'] ?? $prompt,
-                'tanggal_transaksi' => $parsed['tanggal_transaksi'] ?? Carbon::now()->format('Y-m-d'),
-                'metode_pembayaran' => $parsed['metode_pembayaran'] ?? 'Cash',
-                'is_ai_generated' => true,
-            ]);
-
-            $transaction->load('category');
+            $count = count($savedTransactions);
+            $message = $count > 1
+                ? "{$count} transaksi berhasil dicatat otomatis oleh AI!"
+                : 'Transaksi berhasil dicatat oleh AI!';
 
             return response()->json([
                 'success' => true,
-                'message' => 'Transaksi berhasil dicatat oleh AI!',
-                'data' => $transaction,
-                'parsed' => $parsed,
+                'message' => $message,
+                'data' => $savedTransactions[0] ?? null,
+                'transactions' => $savedTransactions,
+                'parsed' => $parsedItems,
             ]);
         } catch (Exception $e) {
             return response()->json([

@@ -4,6 +4,8 @@ import {
     Download,
     LayoutDashboard,
     LogOut,
+    Mic,
+    MicOff,
     PieChart,
     PlusCircle,
     ReceiptText,
@@ -15,6 +17,7 @@ import {
 } from '@lucide/vue';
 import { computed, onMounted, ref } from 'vue';
 import AppLogo from '@/components/AppLogo.vue';
+import { useSpeechRecognition } from '@/composables/useSpeechRecognition';
 import { Toaster } from '@/components/ui/sonner';
 
 defineProps<{
@@ -64,6 +67,22 @@ const showQuickAiModal = ref(false);
 const quickPrompt = ref('');
 const isSubmittingAi = ref(false);
 const aiError = ref<string | null>(null);
+
+// Voice Speech Recognition
+const { isSupported: isSpeechSupported, isListening: isQuickSpeechListening, toggleListening: toggleQuickSpeech } = useSpeechRecognition();
+
+const handleVoiceInput = () => {
+    aiError.value = null;
+    toggleQuickSpeech(
+        (transcript: string, isFinal: boolean) => {
+            quickPrompt.value = transcript;
+            // Jika user berhenti bicara dan kalimat sudah final, otomatis siap dikirim
+        },
+        (errorMsg: string) => {
+            aiError.value = errorMsg;
+        }
+    );
+};
 
 const triggerAiModal = () => {
     showQuickAiModal.value = true;
@@ -500,18 +519,42 @@ const showMobileProfileModal = ref(false);
                 </div>
 
                 <div class="mt-4 space-y-3">
-                    <label
-                        class="text-xs font-medium text-slate-600 dark:text-slate-300"
-                        >Contoh: "Beli ayam geprek 18rb pakai QRIS" atau "Gaji
-                        bulanan 6.5jt"</label
-                    >
-                    <textarea
-                        v-model="quickPrompt"
-                        rows="3"
-                        class="w-full rounded-xl border border-slate-300 bg-slate-50 p-3 text-sm text-slate-900 placeholder-slate-400 transition outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 dark:border-white/10 dark:bg-slate-900/80 dark:text-slate-100 dark:placeholder-slate-500"
-                        placeholder="Ketik transaksi Anda di sini..."
-                        :disabled="isSubmittingAi"
-                    ></textarea>
+                    <div class="flex items-center justify-between">
+                        <label
+                            class="text-xs font-medium text-slate-600 dark:text-slate-300"
+                            >Bicara langsung atau ketik teks bebas:</label
+                        >
+                        <button
+                            v-if="isSpeechSupported"
+                            type="button"
+                            @click="handleVoiceInput"
+                            :class="[
+                                'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all transform active:scale-95',
+                                isQuickSpeechListening
+                                    ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/40 animate-pulse'
+                                    : 'bg-pink-500/15 text-pink-600 hover:bg-pink-500/25 dark:text-pink-400 dark:hover:bg-pink-500/30'
+                            ]"
+                            :title="isQuickSpeechListening ? 'Klik untuk berhenti merekam' : 'Klik untuk bicara pakai suara'"
+                        >
+                            <Mic v-if="!isQuickSpeechListening" class="size-3.5" />
+                            <MicOff v-else class="size-3.5" />
+                            <span>{{ isQuickSpeechListening ? 'Mendengarkan...' : 'Bicara Sekarang' }}</span>
+                        </button>
+                    </div>
+
+                    <div class="relative">
+                        <textarea
+                            v-model="quickPrompt"
+                            rows="3"
+                            class="w-full rounded-xl border border-slate-300 bg-slate-50 p-3 text-sm text-slate-900 placeholder-slate-400 transition outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 dark:border-white/10 dark:bg-slate-900/80 dark:text-slate-100 dark:placeholder-slate-500"
+                            :placeholder="isQuickSpeechListening ? 'Sedang mendengarkan ucapan Anda... Katakan contoh: Beli kopi 25 ribu pakai QRIS' : 'Ketik transaksi Anda di sini atau klik Bicara Sekarang...'"
+                            :disabled="isSubmittingAi"
+                        ></textarea>
+                        <div v-if="isQuickSpeechListening" class="absolute bottom-3 right-3 flex items-center gap-1.5 text-xs text-rose-500 font-semibold bg-rose-50 dark:bg-rose-950/60 px-2.5 py-1 rounded-md border border-rose-300 dark:border-rose-800">
+                            <span class="inline-block size-2 rounded-full bg-rose-500 animate-ping"></span>
+                            <span>Merekam audio...</span>
+                        </div>
+                    </div>
 
                     <div
                         v-if="aiError"

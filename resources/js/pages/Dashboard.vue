@@ -7,6 +7,8 @@ import {
     Bot,
     ChevronRight,
     DollarSign,
+    Mic,
+    MicOff,
     PieChart,
     Plus,
     RefreshCw,
@@ -16,6 +18,7 @@ import {
     Wallet,
 } from '@lucide/vue';
 import { computed, ref } from 'vue';
+import { useSpeechRecognition } from '@/composables/useSpeechRecognition';
 
 interface Category {
     id: number;
@@ -127,6 +130,21 @@ const getCsrfToken = () => {
     return match ? decodeURIComponent(match[1]) : '';
 };
 
+// Voice Input (Speech Recognition)
+const { isSupported: isSpeechSupported, isListening: isSpeechListening, toggleListening } = useSpeechRecognition();
+
+const handleVoiceInput = () => {
+    aiErrorMessage.value = null;
+    toggleListening(
+        (transcript: string, isFinal: boolean) => {
+            aiPrompt.value = transcript;
+        },
+        (errorMsg: string) => {
+            aiErrorMessage.value = errorMsg;
+        }
+    );
+};
+
 // Quick Smart AI Box in Dashboard
 const aiPrompt = ref('');
 const isProcessingAi = ref(false);
@@ -153,7 +171,14 @@ const submitAiTransaction = async () => {
 
         const data = await res.json();
         if (res.ok && data.success) {
-            aiToastMessage.value = `Berhasil disimpan: ${data.data.deskripsi} (${formatRupiah(data.data.nominal)})`;
+            if (data.transactions && data.transactions.length > 1) {
+                const details = data.transactions
+                    .map((t: any) => `${t.deskripsi} (${formatRupiah(t.nominal)})`)
+                    .join(', ');
+                aiToastMessage.value = `${data.transactions.length} transaksi disimpan: ${details}`;
+            } else {
+                aiToastMessage.value = `Berhasil disimpan: ${data.data.deskripsi} (${formatRupiah(data.data.nominal)})`;
+            }
             aiPrompt.value = '';
             // Refresh data
             router.reload({
@@ -463,15 +488,31 @@ const getProgressBarColor = (pct: number) => {
                 </div>
 
                 <div class="flex flex-col gap-3 sm:flex-row">
-                    <div class="relative flex-1">
+                    <div class="relative flex-1 flex items-center">
                         <input
                             v-model="aiPrompt"
                             @keyup.enter="submitAiTransaction"
                             type="text"
-                            placeholder="Ketik transaksi bebas... cth: Beli kopi kenangan 22rb pakai QRIS atau Terima gaji 5jt"
-                            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 transition outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 dark:border-white/10 dark:bg-slate-950/80 dark:text-slate-100 dark:placeholder-slate-500"
+                            :placeholder="isSpeechListening ? 'Mendengarkan... Contoh: Beli nasi padang 20 ribu cash' : 'Ketik transaksi bebas... cth: Beli kopi 22rb pakai QRIS atau Terima gaji 5jt'"
+                            class="w-full rounded-xl border border-slate-300 bg-white py-3 pl-4 pr-12 text-sm text-slate-900 placeholder-slate-400 transition outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 dark:border-white/10 dark:bg-slate-950/80 dark:text-slate-100 dark:placeholder-slate-500"
                             :disabled="isProcessingAi"
                         />
+                        <!-- Voice Mic Button inside Input -->
+                        <button
+                            v-if="isSpeechSupported"
+                            type="button"
+                            @click="handleVoiceInput"
+                            :class="[
+                                'absolute right-2.5 p-2 rounded-lg transition-all',
+                                isSpeechListening
+                                    ? 'bg-rose-500 text-white animate-pulse shadow-md shadow-rose-500/30'
+                                    : 'text-slate-400 hover:text-pink-500 hover:bg-pink-50 dark:hover:bg-pink-950/40'
+                            ]"
+                            :title="isSpeechListening ? 'Sedang merekam (klik untuk selesai)' : 'Gunakan Mikrofon (Bicara)'"
+                        >
+                            <MicOff v-if="isSpeechListening" class="size-4" />
+                            <Mic v-else class="size-4" />
+                        </button>
                     </div>
                     <button
                         @click="submitAiTransaction"

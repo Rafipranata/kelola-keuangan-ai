@@ -1,26 +1,20 @@
 <script setup lang="ts">
-import { Form, Head } from '@inertiajs/vue3';
+import { Form, Head, Link } from '@inertiajs/vue3';
 import InputError from '@/components/InputError.vue';
 import PasswordInput from '@/components/PasswordInput.vue';
-import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
-/* @chisel-registration */
 import { register } from '@/routes';
-/* @end-chisel-registration */
 import { store } from '@/routes/login';
 import { request } from '@/routes/password';
-/* @chisel-passkeys */
-import PasskeyVerify from '@/components/PasskeyVerify.vue';
-/* @end-chisel-passkeys */
 
 defineOptions({
     layout: {
-        title: 'Log in to your account',
-        description: 'Enter your email and password below to log in',
+        title: 'Masuk ke Akun Anda',
+        description: 'Masukkan email dan password Anda untuk mengelola keuangan',
     },
 });
 
@@ -31,28 +25,28 @@ defineProps<{
 </script>
 
 <template>
-    <Head title="Log in" />
+    <Head title="Masuk" />
 
     <div
         v-if="status"
-        class="mb-4 text-center text-sm font-medium text-green-600"
+        class="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3 text-center text-sm font-medium text-emerald-600 dark:text-emerald-400"
     >
         {{ status }}
     </div>
-
-    <!-- @chisel-passkeys -->
-    <PasskeyVerify />
-    <!-- @end-chisel-passkeys -->
 
     <Form
         v-bind="store.form()"
         :reset-on-success="['password']"
         v-slot="{ errors, processing }"
-        class="flex flex-col gap-6"
+        class="flex flex-col gap-5"
     >
-        <div class="grid gap-6">
-            <div class="grid gap-2">
-                <Label for="email">Email address</Label>
+        <div class="grid gap-4">
+            <div class="grid gap-1.5">
+                <Label
+                    for="email"
+                    class="text-xs font-semibold text-slate-700 dark:text-slate-300"
+                    >Alamat Email</Label
+                >
                 <Input
                     id="email"
                     type="email"
@@ -61,22 +55,27 @@ defineProps<{
                     v-focus
                     :tabindex="1"
                     autocomplete="email"
-                    placeholder="email@example.com"
+                    placeholder="nama@email.com"
+                    class="rounded-xl border-slate-300 bg-slate-50 text-sm focus:border-pink-500 focus:ring-1 focus:ring-pink-500 dark:border-white/10 dark:bg-slate-950/80 dark:text-slate-100"
                 />
                 <InputError :message="errors.email" />
             </div>
 
-            <div class="grid gap-2">
+            <div class="grid gap-1.5">
                 <div class="flex items-center justify-between">
-                    <Label for="password">Password</Label>
-                    <TextLink
+                    <Label
+                        for="password"
+                        class="text-xs font-semibold text-slate-700 dark:text-slate-300"
+                        >Password</Label
+                    >
+                    <Link
                         v-if="canResetPassword"
                         :href="request()"
-                        class="text-sm"
+                        class="text-xs font-medium text-pink-600 transition hover:text-pink-500 dark:text-pink-400"
                         :tabindex="5"
                     >
-                        Forgot your password?
-                    </TextLink>
+                        Lupa password?
+                    </Link>
                 </div>
                 <PasswordInput
                     id="password"
@@ -84,35 +83,45 @@ defineProps<{
                     required
                     :tabindex="2"
                     autocomplete="current-password"
-                    placeholder="Password"
+                    placeholder="Masukkan password Anda"
+                    class="rounded-xl border-slate-300 bg-slate-50 text-sm focus:border-pink-500 focus:ring-1 focus:ring-pink-500 dark:border-white/10 dark:bg-slate-950/80 dark:text-slate-100"
                 />
                 <InputError :message="errors.password" />
             </div>
 
-            <div class="flex items-center justify-between">
-                <Label for="remember" class="flex items-center space-x-3">
+            <div class="flex items-center justify-between pt-1">
+                <Label
+                    for="remember"
+                    class="flex cursor-pointer items-center space-x-2 text-xs text-slate-600 dark:text-slate-400"
+                >
                     <Checkbox id="remember" name="remember" :tabindex="3" />
-                    <span>Remember me</span>
+                    <span>Ingat saya</span>
                 </Label>
             </div>
 
             <Button
                 type="submit"
-                class="mt-4 w-full"
+                class="mt-2 flex w-full transform items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-pink-500 to-rose-600 py-2.5 text-sm font-semibold text-white shadow-lg shadow-pink-500/25 transition hover:from-pink-600 hover:to-rose-700 active:scale-95 disabled:opacity-50"
                 :tabindex="4"
                 :disabled="processing"
                 data-test="login-button"
             >
                 <Spinner v-if="processing" />
-                Log in
+                <span>Masuk Sekarang</span>
             </Button>
         </div>
 
-        <!-- @chisel-registration -->
-        <div class="text-center text-sm text-muted-foreground">
-            Don't have an account?
-            <TextLink :href="register()" :tabindex="5">Sign up</TextLink>
+        <div
+            class="text-center text-xs text-slate-500 sm:text-sm dark:text-slate-400"
+        >
+            Belum memiliki akun?
+            <Link
+                :href="register()"
+                :tabindex="5"
+                class="font-semibold text-pink-600 underline-offset-4 hover:underline dark:text-pink-400"
+            >
+                Daftar sekarang
+            </Link>
         </div>
-        <!-- @end-chisel-registration -->
     </Form>
 </template>

@@ -22,10 +22,11 @@
 
 ## 🌟 Sorotan Fitur Utama
 
-### 🧠 1. Smart AI Transaction Parser (Google Gemini)
+### 🧠 1. Smart AI Transaction Parser via Text & Voice
 
 - Tidak perlu lagi repot memilih dropdown kategori dan form yang rumit!
-- Cukup ketik teks bebas Bahasa Indonesia sehari-hari:
+- **Bisa Pakai Suara (Voice Input):** Cukup tekan tombol mikrofon di laptop atau HP, lalu ucapkan transaksi Anda dalam Bahasa Indonesia (didukung Speech Recognition realtime).
+- **Atau Ketik Bebas:**
     > _"Beli ayam geprek 18rb pakai QRIS"_  
     > _"Bayar kos bulan ini 650k transfer"_  
     > _"Dapat uang saku tambahan 500rb"_
